@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+import WeightTracker from '../components/WeightTracker.vue'
 </script>
 
 <template>
   <main>
-    <TheWelcome />
+    <WeightTracker />
   </main>
 </template>

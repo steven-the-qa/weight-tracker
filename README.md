@@ -1,6 +1,6 @@
 # weight-tracker
 
-This template should help get you started developing with Vue 3 in Vite.
+There's a lot going on here. I'll come back and update this with a user guide when I build the actual app.
 
 ## Recommended IDE Setup
 
