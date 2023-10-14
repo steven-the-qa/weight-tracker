@@ -1,9 +1,9 @@
 <script setup lang="ts">
-  import WeightTracker from '../components/WeightTracker.vue'
+  import LoginThing from '../components/LoginThing.vue'
 </script>
 
 <template>
   <main class="h-[100vh] bg-white text-black">
-    <WeightTracker />
+    <LoginThing />
   </main>
 </template>

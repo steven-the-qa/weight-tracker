@@ -1,9 +1,9 @@
 <script setup lang="ts">
-  import EnterWeight from '../components/EnterWeight.vue';
+  import OnboardingThing from '../components/OnboardingThing.vue';
 </script>
 
 <template>
   <main class="h-[100vh] bg-white text-black">
-    <EnterWeight />
+    <OnboardingThing />
   </main>
 </template>
