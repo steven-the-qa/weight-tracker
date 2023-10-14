@@ -5,7 +5,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup
 } from 'firebase/auth'
-import { collection, addDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { db } from '../firebase'
 
 const signInWithGoogle = () => {
@@ -13,14 +13,13 @@ const signInWithGoogle = () => {
   signInWithPopup(getAuth(), provider)
     .then(async (result) => {
       const { user } = result
-      
+      console.log(user.uid)
       try {
-        const docRef = await addDoc(collection(db, "users"), {
+        await setDoc(doc(db, "users", user.uid), {
           display_name: user.displayName,
           email: user.email,
           pfp: user.photoURL
         });
-        console.log("Document written with ID: ", docRef.id);
       }
       catch (e) {
         console.error("Error adding document: ", e);

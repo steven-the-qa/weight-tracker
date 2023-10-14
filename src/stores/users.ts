@@ -5,7 +5,7 @@ export const useUserStore = defineStore('user', {
     return {
         user: null as UserInfo | null
     }
-  },
+  }
 })
 
 interface UserInfo {
