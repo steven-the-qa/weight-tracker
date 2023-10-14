@@ -28,9 +28,8 @@ const handleSignout = () => {
 <template>
   <header>
     <div>
+      <h1 data-testid="app-name" class="flex justify-center items-center h-14 bg-[#2E7EFD] text-white text-lg font-bold">MyWeightTracker</h1>
       <nav>
-        <RouterLink to="/"> Home</RouterLink>
-        <RouterLink to="/onboarding"> Onboarding</RouterLink>
         <button @click="handleSignout" v-if="isLoggedIn"> Sign out</button>
       </nav>
     </div>

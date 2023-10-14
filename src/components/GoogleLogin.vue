@@ -5,11 +5,26 @@ import {
   GoogleAuthProvider,
   signInWithPopup
 } from 'firebase/auth'
+import { collection, addDoc } from "firebase/firestore";
+import { db } from '../firebase'
+
 const signInWithGoogle = () => {
   const provider = new GoogleAuthProvider()
   signInWithPopup(getAuth(), provider)
-    .then(result => {
-      console.log(result.user)
+    .then(async (result) => {
+      const { user } = result
+      
+      try {
+        const docRef = await addDoc(collection(db, "users"), {
+          display_name: user.displayName,
+          email: user.email,
+          pfp: user.photoURL
+        });
+        console.log("Document written with ID: ", docRef.id);
+      }
+      catch (e) {
+        console.error("Error adding document: ", e);
+      }
       router.push('/onboarding')
     })
     .catch(error => {

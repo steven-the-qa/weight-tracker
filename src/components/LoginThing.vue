@@ -3,7 +3,6 @@
 </script>
 
 <template>
-  <h1 data-testid="app-name" class="flex justify-center items-center h-14 bg-[#2E7EFD] text-white text-lg font-bold">MyWeightTracker</h1>
   <p data-testid="header-text" class="flex p-5 bg-white text-black font-medium text-xl">
     Track your weight loss journey with ease and simplicity
   </p>
