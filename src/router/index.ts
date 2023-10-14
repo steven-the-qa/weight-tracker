@@ -35,16 +35,19 @@ const getCurrentUser = async () => {
   })
 }
 
-// router.beforeEach(async (to, from, next) => {
-//   if (to.matched.some((record) => record.meta.requiresAuth)) {
-//     if (await getCurrentUser()) {
-//       next()
-//     }
-//   }
-//   else {
-//     alert("Please log in to access this page.")
-//     next('/')
-//   }
-// })
+router.beforeEach(async (to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (await getCurrentUser()) {
+      next()
+    }
+    else {
+      alert("Please log in to access this page.")
+      next('/')
+    }
+  }
+  else {
+    next()
+  }
+})
 
 export default router
