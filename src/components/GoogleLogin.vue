@@ -7,19 +7,27 @@ import {
 } from 'firebase/auth'
 import { doc, setDoc } from "firebase/firestore";
 import { db } from '../firebase'
+import { useUserStore } from '../stores/user'
+const userStore = useUserStore()
+
 
 const signInWithGoogle = () => {
   const provider = new GoogleAuthProvider()
   signInWithPopup(getAuth(), provider)
     .then(async (result) => {
       const { user } = result
-      console.log(user.uid)
+
       try {
         await setDoc(doc(db, "users", user.uid), {
-          display_name: user.displayName,
+          name: user.displayName,
           email: user.email,
           pfp: user.photoURL
         });
+        userStore.user = ({
+          name: user.displayName,
+          email: user.email,
+          pfp: user.photoURL
+        })
       }
       catch (e) {
         console.error("Error adding document: ", e);
@@ -39,4 +47,4 @@ const signInWithGoogle = () => {
           <span class="text-lg">Continue with Google</span>
       </button>
     </div>
-</template>
+</template>../stores/user

@@ -9,7 +9,7 @@ export const useUserStore = defineStore('user', {
 })
 
 interface UserInfo {
-    displayName: string,
-    email: string,
-    photoUrl: string
+    name: string | null,
+    email: string | null,
+    pfp: string | null
 }
