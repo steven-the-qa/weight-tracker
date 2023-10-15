@@ -47,4 +47,4 @@ const signInWithGoogle = () => {
           <span class="text-lg">Continue with Google</span>
       </button>
     </div>
-</template>../stores/user
+</template>

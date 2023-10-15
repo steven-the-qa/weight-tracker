@@ -13,5 +13,5 @@
       Let's get started, {{ useFirstName() }}
     </p>
     <p v-else>Not able to retrieve current user</p>
-    <p>Tell us a bit about yourself to set your goal and start tracking.</p>
-</template>../stores/user
+    <p class="ml-3">Tell us a bit about yourself to set your goal and start tracking.</p>
+</template>
