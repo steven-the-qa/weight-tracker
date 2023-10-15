@@ -7,8 +7,6 @@ import {
 } from 'firebase/auth'
 import { doc, setDoc } from "firebase/firestore";
 import { db } from '../firebase'
-import { useUserStore } from '../stores/user'
-const userStore = useUserStore()
 
 
 const signInWithGoogle = () => {
@@ -23,11 +21,6 @@ const signInWithGoogle = () => {
           email: user.email,
           pfp: user.photoURL
         });
-        userStore.user = ({
-          name: user.displayName,
-          email: user.email,
-          pfp: user.photoURL
-        })
       }
       catch (e) {
         console.error("Error adding document: ", e);

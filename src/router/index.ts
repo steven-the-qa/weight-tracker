@@ -1,13 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
 import OnboardingView from '../views/OnboardingView.vue'
+import DashboardView from '../views/DashboardView.vue'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: '/',
+      path: '/login',
       name: 'login',
       component: LoginView
     },
@@ -15,6 +16,14 @@ const router = createRouter({
       path: '/onboarding',
       name: 'onboarding',
       component: OnboardingView,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/',
+      name: 'dashboard',
+      component: DashboardView,
       meta: {
         requiresAuth: true
       }
@@ -41,8 +50,7 @@ router.beforeEach(async (to, from, next) => {
       next()
     }
     else {
-      alert("Please log in to access this page.")
-      next('/')
+      next('/login')
     }
   }
   else {
