@@ -1,6 +1,32 @@
 <script setup lang="ts">
+import { ref, reactive } from 'vue';
   import { getAuth } from 'firebase/auth'
-  const firstName = getAuth().currentUser?.displayName?.split(' ')[0]
+  import { doc, serverTimestamp, setDoc, collection, DocumentReference, CollectionReference, addDoc} from "firebase/firestore";
+  import { db } from '../firebase'
+
+  const user = getAuth().currentUser
+  const firstName = user?.displayName?.split(' ')[0]
+  const currentWeight = ref(null)
+  const goalWeight = ref(null)
+  const state = reactive({ currentWeight, goalWeight })
+  const handleSubmit = async () => {
+    try {
+        if (user == null) return
+        const userRef: DocumentReference = doc(db, 'users', user.uid)
+        await setDoc(userRef, {
+          goalWeight: state.goalWeight,
+          currentWeight: state.currentWeight
+        }, { merge: true })
+        const weightEntriesRef: CollectionReference = collection(userRef, 'weightEntries')
+        addDoc(weightEntriesRef, {
+          createdDate: serverTimestamp(),
+          weight: state.currentWeight
+        })
+    }
+    catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  }
 </script>
 
 <template>
@@ -12,7 +38,7 @@
   </p>
   <p v-else>Not able to retrieve current user</p>
   <p class="ml-3 mb-20 text-lg tracking-wide">Tell us a bit about yourself to set your goal and start tracking.</p>
-  <form class="flex flex-col justify-center text-[#4B4B4B] text-lg h-[50%] tracking-wide">
+  <form @submit.prevent="handleSubmit" class="flex flex-col justify-center text-[#4B4B4B] text-lg h-[50%] tracking-wide">
     <div id="current-weight-group" class="flex flex-col mb-5 mx-3">
       <label class="" for="current-weight">What's your current weight?</label>
       <input class="placeholder:text-[#BDBDBD] h-14 pl-3 mr-5 rounded-lg bg-white border border-[#BDBDBD]" type="number" id="current-weight" name="current-weight" step="0.01" placeholder="enter current weight" required>

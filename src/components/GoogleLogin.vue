@@ -20,7 +20,7 @@ const signInWithGoogle = () => {
           name: user.displayName,
           email: user.email,
           pfp: user.photoURL
-        });
+        }, { merge: true });
       }
       catch (e) {
         console.error("Error adding document: ", e);
