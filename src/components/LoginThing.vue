@@ -13,7 +13,7 @@
     <li>Set a goal</li>
     <li>Track towards the goal</li>
   </ul>
-  <img src="src/assets/splash.png" alt="Athletic man facing the user, smiling with a thumbs-up gesture, standing next to an athletic woman with her body facing away but head turned back to look at the user, with blue splash pattern backdrop"/>
+  <img src="/src/assets/splash.png" alt="Athletic man facing the user, smiling with a thumbs-up gesture, standing next to an athletic woman with her body facing away but head turned back to look at the user, with blue splash pattern backdrop"/>
   <p class="flex justify-center items-center h-14 text-xl font-bold">Let's get started</p>
   <GoogleLogin />
 </template>
