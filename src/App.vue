@@ -31,7 +31,7 @@ const handleSignout = () => {
 <template>
   <header v-if="$route.name !== 'login' && $route.name !== 'onboarding'">
     <h1 data-testid="app-name" class="flex justify-center items-center h-14 bg-[#2E7EFD] text-white text-lg font-bold">MyWeightTracker</h1>
-    <img v-if="pfp" :src="pfp" alt="Profile pic from user's Google account" />
+    <img v-if="pfp" :src="pfp" alt="Profile pic from user's Google account" referrerpolicy="no-referrer" />
   </header>
 
   <RouterView />
