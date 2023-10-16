@@ -41,11 +41,11 @@ import { ref, reactive } from 'vue';
   <form @submit.prevent="handleSubmit" class="flex flex-col justify-center text-[#4B4B4B] text-lg h-[50%] tracking-wide">
     <div id="current-weight-group" class="flex flex-col mb-5 mx-3">
       <label class="" for="current-weight">What's your current weight?</label>
-      <input class="placeholder:text-[#BDBDBD] h-14 pl-3 mr-5 rounded-lg bg-white border border-[#BDBDBD]" type="number" id="current-weight" name="current-weight" step="0.01" placeholder="enter current weight" required>
+      <input v-model="currentWeight" class="placeholder:text-[#BDBDBD] h-14 pl-3 mr-5 rounded-lg bg-white border border-[#BDBDBD]" type="number" id="current-weight" name="current-weight" step="0.01" placeholder="enter current weight" required>
     </div>
     <div id="goal-weight-group" class="flex flex-col mx-3">
       <label for="goal-weight">What's your goal weight?</label>
-      <input class="placeholder:text-[#BDBDBD] h-14 pl-3 mr-5 rounded-lg bg-white border border-[#BDBDBD]" type="number" id="goal-weight" name="goal-weight" step="0.01" placeholder="enter goal weight" required>
+      <input v-model="goalWeight" class="placeholder:text-[#BDBDBD] h-14 pl-3 mr-5 rounded-lg bg-white border border-[#BDBDBD]" type="number" id="goal-weight" name="goal-weight" step="0.01" placeholder="enter goal weight" required>
     </div>
     <input class="mt-auto bg-[#2058E8] py-4 px-5 mx-3 rounded-xl text-white font-semibold" type="submit" value="Continue" onsubmit="">
   </form>
