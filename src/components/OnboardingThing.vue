@@ -3,6 +3,7 @@ import { ref, reactive } from 'vue';
   import { getAuth } from 'firebase/auth'
   import { doc, serverTimestamp, setDoc, collection, DocumentReference, CollectionReference, addDoc} from "firebase/firestore";
   import { db } from '../firebase'
+import router from '@/router';
 
   const user = getAuth().currentUser
   const firstName = user?.displayName?.split(' ')[0]
@@ -12,16 +13,20 @@ import { ref, reactive } from 'vue';
   const handleSubmit = async () => {
     try {
         if (user == null) return
+
         const userRef: DocumentReference = doc(db, 'users', user.uid)
         await setDoc(userRef, {
           goalWeight: state.goalWeight,
           currentWeight: state.currentWeight
         }, { merge: true })
+
         const weightEntriesRef: CollectionReference = collection(userRef, 'weightEntries')
         addDoc(weightEntriesRef, {
           createdDate: serverTimestamp(),
           weight: state.currentWeight
         })
+
+        router.push('/')
     }
     catch (e) {
       console.error("Error adding document: ", e);
