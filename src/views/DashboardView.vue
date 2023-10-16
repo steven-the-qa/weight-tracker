@@ -4,6 +4,8 @@
 
 <template>
   <main class="h-[100vh] bg-white text-black">
-    <DashboardThing />
+    <Suspense>
+      <DashboardThing />
+    </Suspense>
   </main>
 </template>

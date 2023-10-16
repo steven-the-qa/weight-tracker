@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
-  import { getAuth } from 'firebase/auth'
-  import { doc, serverTimestamp, setDoc, collection, DocumentReference, CollectionReference, addDoc} from "firebase/firestore";
-  import { db } from '../firebase'
+import { getAuth } from 'firebase/auth'
+import { doc, serverTimestamp, setDoc, collection, DocumentReference, CollectionReference, addDoc} from "firebase/firestore";
+import { db } from '../firebase'
 import router from '@/router';
 
   const user = getAuth().currentUser
@@ -21,7 +21,7 @@ import router from '@/router';
         }, { merge: true })
 
         const weightEntriesRef: CollectionReference = collection(userRef, 'weightEntries')
-        addDoc(weightEntriesRef, {
+        await addDoc(weightEntriesRef, {
           createdDate: serverTimestamp(),
           weight: state.currentWeight
         })

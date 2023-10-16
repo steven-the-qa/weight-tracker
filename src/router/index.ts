@@ -3,6 +3,10 @@ import LoginView from '../views/LoginView.vue'
 import OnboardingView from '../views/OnboardingView.vue'
 import DashboardView from '../views/DashboardView.vue'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import type { User } from 'firebase/auth'
+import { doc, getDocs, collection } from "firebase/firestore";
+import type { DocumentReference, CollectionReference } from 'firebase/firestore'
+import { db } from '../firebase'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -18,6 +22,18 @@ const router = createRouter({
       component: OnboardingView,
       meta: {
         requiresAuth: true
+      },
+      beforeEnter: async (to, from, next) => {
+        const user: User = getAuth().currentUser as User
+        const userRef: DocumentReference = doc(db, 'users', user.uid)
+        const weightEntriesRef: CollectionReference = collection(userRef, 'weightEntries')
+
+        if ((await getDocs(weightEntriesRef)).docs.length > 0) {
+          next('/')
+        }
+        else {
+          next()
+        }
       }
     },
     {
