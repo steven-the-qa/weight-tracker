@@ -21,8 +21,28 @@ const displayedChange: string = weightChange > 0 ? `+ ${weightChange}` : weightC
 </script>
 
 <template>
-    <p>Start: {{ startWeight }}</p>
-    <p>Current: {{ currentWeight }}</p>
-    <p>Goal: {{ goalWeight }}</p>
-    <p>Change: {{ displayedChange }}</p>
+    <div class="flex justify-between p-5 text-xl">
+        <section class="flex flex-col justify-between">
+        <div data-testid="start-weight" class="flex flex-col items-center">
+            <p class="font-extrabold">Start</p>
+            <p>{{ startWeight }}</p>
+        </div>
+        <div data-testid="weight-change" class="flex flex-col items-center">
+            <p class="font-extrabold">Change</p>
+            <p>{{ displayedChange }}</p>
+        </div>
+        </section>
+        <section>
+            <div data-testid="current-weight" class="flex flex-col items-center">
+                <p class="font-extrabold">Current</p>
+                <p>{{ currentWeight }}</p>
+            </div>
+        </section>
+        <section>
+            <div data-testid="goal-weight" class="flex flex-col items-center">
+                <p class="font-extrabold">Goal</p>
+                <p>{{ goalWeight }}</p>
+            </div>
+        </section>
+    </div>
 </template>
