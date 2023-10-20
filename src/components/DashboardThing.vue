@@ -70,7 +70,7 @@ const addWeight = async () => {
                 <p :class="changeColor">{{ displayedChange }}</p>
             </div>
             <div class="flex justify-center items-center p-2 bg-[#6D1D7C] rounded-full">
-                <div data-testid="add-weight-btn" class="bg-[url('/src/assets/plus.png')] bg-no-repeat bg-contain h-8 w-8" />
+                <div data-testid="add-weight-btn" class="bg-[url('/src/assets/plus.png')] bg-no-repeat bg-contain h-8 w-8"></div>
             </div>
         </section>
     </div>
