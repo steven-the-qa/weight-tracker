@@ -22,7 +22,7 @@ const changeColor: string = weightChange > 0 ? 'text-[#EA4335]' : weightChange <
 </script>
 
 <template>
-    <div class="h-full grid grid-cols-auto grid-rows-6 p-5 text-xl font-bold text-black">
+    <div class="h-[90%] grid grid-cols-auto grid-rows-6 p-5 text-xl font-bold text-black">
         <section class="flex justify-between items-start row-span-auto">
             <div data-testid="start-weight" class="flex flex-col items-center">
                 <p>Start</p>
