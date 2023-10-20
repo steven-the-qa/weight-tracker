@@ -9,7 +9,7 @@
   <p data-testid="header-text" class="flex p-5 bg-white text-black font-medium text-xl">
     Track your weight loss journey with ease and simplicity
   </p>
-  <ul data-testid="goal-list" role="list" class="ml-12 mb-5 list-disc font-light">
+  <ul data-testid="goal-list" role="list" class="ml-12 list-disc font-light">
     <li>Set a goal</li>
     <li>Track towards the goal</li>
   </ul>
