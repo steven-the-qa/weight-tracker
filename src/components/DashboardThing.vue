@@ -28,14 +28,10 @@ const changeColor: string = weightChange > 0 ? 'text-[#EA4335]' : weightChange <
 const addWeight = async () => {
     try {
         if (user == null) return
-
-        const userRef: DocumentReference = doc(db, 'users', user.uid)
         await setDoc(userRef, {
-          goalWeight: state.goalWeight,
-          currentWeight: state.currentWeight
+          currentWeight: state.currentWeight,
         }, { merge: true })
 
-        const weightEntriesRef: CollectionReference = collection(userRef, 'weightEntries')
         await addDoc(weightEntriesRef, {
           createdDate: serverTimestamp(),
           weight: state.currentWeight
