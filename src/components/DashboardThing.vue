@@ -1,9 +1,14 @@
 <script setup lang="ts">
+import { ref, reactive } from 'vue';
+import type { Ref } from 'vue'
 import { getAuth } from 'firebase/auth'
 import type { User } from 'firebase/auth'
-import { doc, getDoc, getDocs, collection } from "firebase/firestore";
+import { doc, getDoc, getDocs, collection, setDoc, addDoc, serverTimestamp } from "firebase/firestore";
 import type { DocumentReference, CollectionReference, DocumentSnapshot, DocumentData, QuerySnapshot } from 'firebase/firestore'
 import { db } from '../firebase'
+const currentWeight: Ref<number | null> = ref(null)
+const goalWeight: Ref<number | null> = ref(null)
+const state = reactive({ currentWeight, goalWeight })
 
 const user: User = getAuth().currentUser as User
 const userRef: DocumentReference = doc(db, 'users', user.uid)
@@ -14,11 +19,32 @@ const weightEntries: QuerySnapshot = await getDocs(weightEntriesRef)
 const firstWeightEntry: number = weightEntries.docs[0].get('weight');
 
 const startWeight: number = firstWeightEntry
-const currentWeight: number = userData.currentWeight
-const goalWeight: number = userData.goalWeight
-const weightChange: number = startWeight - currentWeight
-const displayedChange: string = weightChange > 0 ? `+ ${weightChange}` : weightChange < 0 ? `- ${weightChange}` : `${weightChange}`
+state.currentWeight = userData.currentWeight
+state.goalWeight = userData.goalWeight
+const weightChange: number = state.currentWeight ? (startWeight - state.currentWeight) : 0
+const displayedChange: string = weightChange > 0 ? `+${weightChange.toFixed(1)} lb` : weightChange < 0 ? `-${Math.abs(weightChange).toFixed(1)} lb` : `${weightChange.toFixed(1)} lb`
 const changeColor: string = weightChange > 0 ? 'text-[#EA4335]' : weightChange < 0 ? 'text-[#34A853]' : 'text-[#4B4B4B]'
+
+const addWeight = async () => {
+    try {
+        if (user == null) return
+
+        const userRef: DocumentReference = doc(db, 'users', user.uid)
+        await setDoc(userRef, {
+          goalWeight: state.goalWeight,
+          currentWeight: state.currentWeight
+        }, { merge: true })
+
+        const weightEntriesRef: CollectionReference = collection(userRef, 'weightEntries')
+        await addDoc(weightEntriesRef, {
+          createdDate: serverTimestamp(),
+          weight: state.currentWeight
+        })
+    }
+    catch (e) {
+      console.error("Error adding document: ", e);
+    }
+}
 </script>
 
 <template>
@@ -42,10 +68,13 @@ const changeColor: string = weightChange > 0 ? 'text-[#EA4335]' : weightChange <
                 TBD - Graph
             </div> -->
         </section>
-        <section class="flex items-end row-span-auto">
+        <section class="flex justify-between items-end row-span-auto">
             <div data-testid="weight-change" class="flex flex-col justify-center items-center">
                 <p>Change</p>
                 <p :class="changeColor">{{ displayedChange }}</p>
+            </div>
+            <div class="flex justify-center items-center p-2 bg-[#6D1D7C] rounded-full">
+                <div data-testid="add-weight-btn" class="bg-[url('/src/assets/plus.png')] bg-no-repeat bg-contain h-8 w-8" />
             </div>
         </section>
     </div>
