@@ -48,7 +48,7 @@
                     <label class="mb-3 mt-6 text-xl font-normal" for="current-weight">{{ props.message }}</label>
                     <input v-model="currentWeight" class="placeholder:text-[#BDBDBD] h-14 pl-3 mr-10 rounded-lg bg-white border border-[#BDBDBD]" type="number" id="current-weight" name="current-weight" step="0.1" placeholder="enter current weight" required>
                 </div>
-                <input class="mt-auto mb-5 bg-[#2058E8] py-4 w-[90%] rounded-xl text-white font-semibold" type="submit" value="Add weight" onsubmit="">
+                <input class="mt-auto mb-5 bg-[#2058E8] py-4 w-[87%] rounded-xl text-white font-semibold" type="submit" value="Add weight" onsubmit="">
             </form>
         </div>
     </div>
