@@ -5,13 +5,15 @@
     const user = getAuth().currentUser
 
     const props = defineProps({
-        message: String
+        message: String,
+        handleDialog: Function
     })
     import { ref, reactive } from 'vue';
     const currentWeight = ref(null)
     const state = reactive({ currentWeight })
     const closeDialog = () => {
         document.getElementById('dialog')?.classList.replace('block', 'hidden')
+        props.handleDialog && props.handleDialog()
     }
     const handleSubmit = async () => {
         try {
