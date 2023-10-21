@@ -10,6 +10,9 @@
     import { ref, reactive } from 'vue';
     const currentWeight = ref(null)
     const state = reactive({ currentWeight })
+    const closeDialog = () => {
+        document.getElementById('dialog')?.classList.replace('block', 'hidden')
+    }
     const handleSubmit = async () => {
         try {
             if (user == null) return
@@ -25,7 +28,7 @@
                 weight: state.currentWeight
             })
 
-            document.getElementById('dialog')?.classList.replace('block', 'hidden')
+            closeDialog()
         }
         catch (e) {
             console.error("Error adding document: ", e);
@@ -37,7 +40,7 @@
 <template>
     <div id='dialog' class="hidden absolute inset-0 z-[100] bg-[#070707]">
         <div class="flex justify-center items-center h-48 w-96 bg-white">
-            <p class="absolute top-2 right-4">X</p>
+            <p :onclick="closeDialog" class="absolute top-2 right-4">X</p>
             <p>{{ props.message }}</p>
             <form @submit.prevent="handleSubmit" class="flex flex-col justify-center text-[#4B4B4B] text-lg h-[50%] tracking-wide">
                 <div id="current-weight-group" class="flex flex-col mb-5 mx-3">
