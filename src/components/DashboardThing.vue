@@ -1,46 +1,48 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
-import type { Ref } from 'vue'
-import { getAuth } from 'firebase/auth'
-import type { User } from 'firebase/auth'
-import { doc, getDoc, getDocs, collection, setDoc, addDoc, serverTimestamp } from "firebase/firestore";
-import type { DocumentReference, CollectionReference, DocumentSnapshot, DocumentData, QuerySnapshot } from 'firebase/firestore'
-import { db } from '../firebase'
-const currentWeight: Ref<number | null> = ref(null)
-const goalWeight: Ref<number | null> = ref(null)
-const state = reactive({ currentWeight, goalWeight })
+    import AddWeightButton from './AddWeightButton.vue'
+    import { ref, reactive } from 'vue';
+    import type { Ref } from 'vue'
+    import { getAuth } from 'firebase/auth'
+    import type { User } from 'firebase/auth'
+    import { doc, getDoc, getDocs, collection, setDoc, addDoc, serverTimestamp } from "firebase/firestore";
+    import type { DocumentReference, CollectionReference, DocumentSnapshot, DocumentData, QuerySnapshot } from 'firebase/firestore'
+    import { db } from '../firebase'
 
-const user: User = getAuth().currentUser as User
-const userRef: DocumentReference = doc(db, 'users', user.uid)
-const userSnapshot: DocumentSnapshot = await getDoc(userRef)
-const userData: DocumentData = userSnapshot.data() as DocumentData;
-const weightEntriesRef: CollectionReference = collection(userRef, 'weightEntries')
-const weightEntries: QuerySnapshot = await getDocs(weightEntriesRef)
-const firstWeightEntry: number = weightEntries.docs[0].get('weight');
+    const currentWeight: Ref<number | null> = ref(null)
+    const goalWeight: Ref<number | null> = ref(null)
+    const state = reactive({ currentWeight, goalWeight })
 
-const startWeight: number = firstWeightEntry
-state.currentWeight = userData.currentWeight
-state.goalWeight = userData.goalWeight
-const weightChange: number = state.currentWeight ? (startWeight - state.currentWeight) : 0
-const displayedChange: string = weightChange > 0 ? `+${weightChange.toFixed(1)} lb` : weightChange < 0 ? `-${Math.abs(weightChange).toFixed(1)} lb` : `${weightChange.toFixed(1)} lb`
-const changeColor: string = weightChange > 0 ? 'text-[#EA4335]' : weightChange < 0 ? 'text-[#34A853]' : 'text-[#4B4B4B]'
+    const user: User = getAuth().currentUser as User
+    const userRef: DocumentReference = doc(db, 'users', user.uid)
+    const userSnapshot: DocumentSnapshot = await getDoc(userRef)
+    const userData: DocumentData = userSnapshot.data() as DocumentData;
+    const weightEntriesRef: CollectionReference = collection(userRef, 'weightEntries')
+    const weightEntries: QuerySnapshot = await getDocs(weightEntriesRef)
+    const firstWeightEntry: number = weightEntries.docs[0].get('weight');
 
-const addWeight = async () => {
-    try {
-        if (user == null) return
-        await setDoc(userRef, {
-          currentWeight: state.currentWeight,
-        }, { merge: true })
+    const startWeight: number = firstWeightEntry
+    state.currentWeight = userData.currentWeight
+    state.goalWeight = userData.goalWeight
+    const weightChange: number = state.currentWeight ? (startWeight - state.currentWeight) : 0
+    const displayedChange: string = weightChange > 0 ? `+${weightChange.toFixed(1)} lb` : weightChange < 0 ? `-${Math.abs(weightChange).toFixed(1)} lb` : `${weightChange.toFixed(1)} lb`
+    const changeColor: string = weightChange > 0 ? 'text-[#EA4335]' : weightChange < 0 ? 'text-[#34A853]' : 'text-[#4B4B4B]'
 
-        await addDoc(weightEntriesRef, {
-          createdDate: serverTimestamp(),
-          weight: state.currentWeight
-        })
+    const addWeight = async () => {
+        try {
+            if (user == null) return
+            await setDoc(userRef, {
+            currentWeight: state.currentWeight,
+            }, { merge: true })
+
+            await addDoc(weightEntriesRef, {
+            createdDate: serverTimestamp(),
+            weight: state.currentWeight
+            })
+        }
+        catch (e) {
+        console.error("Error adding document: ", e);
+        }
     }
-    catch (e) {
-      console.error("Error adding document: ", e);
-    }
-}
 </script>
 
 <template>
@@ -69,9 +71,7 @@ const addWeight = async () => {
                 <p>Change</p>
                 <p :class="changeColor">{{ displayedChange }}</p>
             </div>
-            <div class="flex justify-center items-center p-2 bg-[#6D1D7C] rounded-full">
-                <div data-testid="add-weight-btn" class="bg-[url('/src/assets/plus.png')] bg-no-repeat bg-contain h-8 w-8"></div>
-            </div>
+            <AddWeightButton />
         </section>
     </div>
 </template>
