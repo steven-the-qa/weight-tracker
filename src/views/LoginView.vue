@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <main class="h-[100vh] bg-white text-black">
+  <main class="bg-white text-black">
     <LoginThing />
   </main>
 </template>
