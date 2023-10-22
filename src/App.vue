@@ -34,6 +34,6 @@ const handleSignout = () => {
     <img class="flex justify-center items-center rounded-full p-4" v-if="pfp" :src="pfp" alt="Profile pic from user's Google account" referrerpolicy="no-referrer" />
   </header>
 
-  <RouterView class="h-[90%]"/>
+  <RouterView />
   <button v-if="$route.name != 'login'" class="bg-red-500 w-full flex justify-center items-center h-10 text-white" @click="handleSignout"> Sign out</button>
 </template>
