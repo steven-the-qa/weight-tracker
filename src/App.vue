@@ -35,5 +35,4 @@ const handleSignout = () => {
   </header>
 
   <RouterView class="h-[90%]"/>
-  <button class="bg-red-500 w-full flex justify-center items-center h-10 text-white bottom-0 absolute" @click="handleSignout" v-if="isLoggedIn"> Sign out</button>
 </template>
