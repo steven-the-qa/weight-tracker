@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import AddWeight from './AddWeight.vue'
-    import { ref, reactive, onMounted } from 'vue';
+    import { ref, reactive } from 'vue';
     import type { Ref } from 'vue'
     import { getAuth } from 'firebase/auth'
     import type { User } from 'firebase/auth'
