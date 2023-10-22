@@ -1,50 +1,40 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
-import type { Ref } from 'vue'
-import { getAuth } from 'firebase/auth'
-import type { User } from 'firebase/auth'
-import { doc, getDoc, getDocs, collection, setDoc, addDoc, serverTimestamp } from "firebase/firestore";
-import type { DocumentReference, CollectionReference, DocumentSnapshot, DocumentData, QuerySnapshot } from 'firebase/firestore'
-import { db } from '../firebase'
-const currentWeight: Ref<number | null> = ref(null)
-const goalWeight: Ref<number | null> = ref(null)
-const state = reactive({ currentWeight, goalWeight })
+    import AddWeight from './AddWeight.vue'
+    import { ref, reactive } from 'vue';
+    import type { Ref } from 'vue'
+    import { getAuth } from 'firebase/auth'
+    import type { User } from 'firebase/auth'
+    import { onSnapshot, doc, getDoc, getDocs, collection, query, orderBy, limit } from "firebase/firestore";
+    import type { DocumentReference, CollectionReference, DocumentData, Query } from 'firebase/firestore'
+    import { db } from '../firebase'
+    const user: User = getAuth().currentUser as User
+    const userRef: DocumentReference = doc(db, 'users', user.uid)
+    const userData: DocumentData = (await getDoc(userRef)).data() as DocumentData
+    let startWeight: number;
+    const currentWeight: Ref<number | null> = ref(null)
+    const goalWeight: Ref<number | null> = ref(null)
+    const weightChange: Ref<number | null> = ref(null)
+    const displayedChange: Ref<string> = ref('')
+    const changeColor: Ref<string> = ref('')
+    const state = reactive({ userData, currentWeight, goalWeight, weightChange, displayedChange, changeColor })
 
-const user: User = getAuth().currentUser as User
-const userRef: DocumentReference = doc(db, 'users', user.uid)
-const userSnapshot: DocumentSnapshot = await getDoc(userRef)
-const userData: DocumentData = userSnapshot.data() as DocumentData;
-const weightEntriesRef: CollectionReference = collection(userRef, 'weightEntries')
-const weightEntries: QuerySnapshot = await getDocs(weightEntriesRef)
-const firstWeightEntry: number = weightEntries.docs[0].get('weight');
+    const weightEntriesRef: CollectionReference = collection(userRef, 'weightEntries')
+    const firstWeightEntryQ: Query = query(weightEntriesRef, orderBy('createdDate'), limit(1))
+    const firstWeightEntry: DocumentData = (await getDocs(firstWeightEntryQ)).docs[0]
+    startWeight = firstWeightEntry.get('weight');
 
-const startWeight: number = firstWeightEntry
-state.currentWeight = userData.currentWeight
-state.goalWeight = userData.goalWeight
-const weightChange: number = state.currentWeight ? (startWeight - state.currentWeight) : 0
-const displayedChange: string = weightChange > 0 ? `+${weightChange.toFixed(1)} lb` : weightChange < 0 ? `-${Math.abs(weightChange).toFixed(1)} lb` : `${weightChange.toFixed(1)} lb`
-const changeColor: string = weightChange > 0 ? 'text-[#EA4335]' : weightChange < 0 ? 'text-[#34A853]' : 'text-[#4B4B4B]'
-
-const addWeight = async () => {
-    try {
-        if (user == null) return
-        await setDoc(userRef, {
-          currentWeight: state.currentWeight,
-        }, { merge: true })
-
-        await addDoc(weightEntriesRef, {
-          createdDate: serverTimestamp(),
-          weight: state.currentWeight
-        })
-    }
-    catch (e) {
-      console.error("Error adding document: ", e);
-    }
-}
+    onSnapshot(userRef, async (userSnapshot) => {
+        state.userData = (userSnapshot).data() as DocumentData
+        state.currentWeight = state.userData.currentWeight
+        state.goalWeight = state.userData.goalWeight
+        state.weightChange = state.currentWeight ? (startWeight - state.currentWeight) : 0
+        state.displayedChange = state.weightChange > 0 ? `-${state.weightChange.toFixed(1)} lb` : state.weightChange < 0 ? `+${Math.abs(state.weightChange).toFixed(1)} lb` : `${state.weightChange.toFixed(1)} lb`
+        state.changeColor = state.weightChange < 0 ? 'text-[#EA4335]' : state.weightChange > 0 ? 'text-[#34A853]' : 'text-[#4B4B4B]'
+    })
 </script>
 
 <template>
-    <div class="h-[90%] grid grid-cols-auto grid-rows-6 p-5 text-xl font-bold text-black">
+    <div class="h-full grid grid-cols-auto grid-rows-6 p-5 text-xl font-bold text-black">
         <section class="flex justify-between items-start row-span-auto">
             <div data-testid="start-weight" class="flex flex-col items-center">
                 <p>Start</p>
@@ -59,19 +49,17 @@ const addWeight = async () => {
                 <p class="text-[#4B4B4B]">{{ goalWeight }}</p>
             </div>
         </section>
-        <section class="flex justify-center items-center row-span-3">
+        <section class="flex justify-center items-center row-span-2">
             <!-- <div class="flex justify-center items-center h-44 w-72 bg-[#D9D9D9]">
                 TBD - Graph
             </div> -->
         </section>
-        <section class="flex justify-between items-end row-span-auto">
+        <section class="flex justify-between items-end row-span-2">
             <div data-testid="weight-change" class="flex flex-col justify-center items-center">
                 <p>Change</p>
                 <p :class="changeColor">{{ displayedChange }}</p>
             </div>
-            <div class="flex justify-center items-center p-2 bg-[#6D1D7C] rounded-full">
-                <div data-testid="add-weight-btn" class="bg-[url('/src/assets/plus.png')] bg-no-repeat bg-contain h-8 w-8"></div>
-            </div>
+            <AddWeight />
         </section>
     </div>
 </template>

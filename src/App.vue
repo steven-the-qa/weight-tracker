@@ -29,11 +29,11 @@ const handleSignout = () => {
 </script>
 
 <template>
-  <header v-if="$route.name == 'dashboard'" class="flex justify-between bg-[#2E7EFD] h-20 font-['Kanit']">
+  <header v-if="$route.name == 'dashboard'" class="flex justify-between bg-[#2E7EFD] h-[10%] font-['Kanit']">
     <h1 data-testid="app-name" class="flex items-center pl-4 text-white text-xl w-[75%]">MyWeightTracker</h1>
     <img class="flex justify-center items-center rounded-full p-4" v-if="pfp" :src="pfp" alt="Profile pic from user's Google account" referrerpolicy="no-referrer" />
   </header>
 
-  <RouterView />
-  <button @click="handleSignout" v-if="isLoggedIn"> Sign out</button>
+  <RouterView class="h-[90%]"/>
+  <button class="bg-red-500 w-full flex justify-center items-center h-10 text-white bottom-0 absolute" @click="handleSignout" v-if="isLoggedIn"> Sign out</button>
 </template>
