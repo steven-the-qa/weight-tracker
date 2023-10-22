@@ -7,21 +7,19 @@
     import { doc, getDoc, getDocs, collection, query, orderBy, limit } from "firebase/firestore";
     import type { DocumentReference, CollectionReference, DocumentSnapshot, DocumentData, Query } from 'firebase/firestore'
     import { db } from '../firebase'
+    const user: User = getAuth().currentUser as User
 
     const currentWeight: Ref<number | null> = ref(null)
     const goalWeight: Ref<number | null> = ref(null)
     const state = reactive({ currentWeight, goalWeight })
 
-    const user: User = getAuth().currentUser as User
     const userRef: DocumentReference = doc(db, 'users', user.uid)
-    const userSnapshot: DocumentSnapshot = await getDoc(userRef)
-    const userData: DocumentData = userSnapshot.data() as DocumentData;
+    const userData: DocumentData = (await getDoc(userRef)).data() as DocumentData
     const weightEntriesRef: CollectionReference = collection(userRef, 'weightEntries')
-    const firstEntryQ: Query = query(weightEntriesRef, orderBy('createdDate'), limit(1))
-    const firstEntryDoc: DocumentData = await getDocs(firstEntryQ)
-    const firstWeightEntry: number = firstEntryDoc.docs[0].get('weight');
+    const firstWeightEntryQ: Query = query(weightEntriesRef, orderBy('createdDate'), limit(1))
+    const firstWeightEntry: DocumentData = (await getDocs(firstWeightEntryQ)).docs[0]
 
-    const startWeight: number = firstWeightEntry
+    const startWeight: number = firstWeightEntry.get('weight');
     state.currentWeight = userData.currentWeight
     state.goalWeight = userData.goalWeight
     const weightChange: number = state.currentWeight ? (startWeight - state.currentWeight) : 0
