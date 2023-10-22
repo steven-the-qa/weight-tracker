@@ -4,8 +4,8 @@
     import type { Ref } from 'vue'
     import { getAuth } from 'firebase/auth'
     import type { User } from 'firebase/auth'
-    import { doc, getDoc, getDocs, collection, setDoc, addDoc, serverTimestamp } from "firebase/firestore";
-    import type { DocumentReference, CollectionReference, DocumentSnapshot, DocumentData, QuerySnapshot } from 'firebase/firestore'
+    import { doc, getDoc, getDocs, collection, query, orderBy, limit } from "firebase/firestore";
+    import type { DocumentReference, CollectionReference, DocumentSnapshot, DocumentData, Query } from 'firebase/firestore'
     import { db } from '../firebase'
 
     const currentWeight: Ref<number | null> = ref(null)
@@ -17,14 +17,15 @@
     const userSnapshot: DocumentSnapshot = await getDoc(userRef)
     const userData: DocumentData = userSnapshot.data() as DocumentData;
     const weightEntriesRef: CollectionReference = collection(userRef, 'weightEntries')
-    const weightEntries: QuerySnapshot = await getDocs(weightEntriesRef)
-    const firstWeightEntry: number = weightEntries.docs[0].get('weight');
+    const firstEntryQ: Query = query(weightEntriesRef, orderBy('createdDate'), limit(1))
+    const firstEntryDoc: DocumentData = await getDocs(firstEntryQ)
+    const firstWeightEntry: number = firstEntryDoc.docs[0].get('weight');
 
     const startWeight: number = firstWeightEntry
     state.currentWeight = userData.currentWeight
     state.goalWeight = userData.goalWeight
     const weightChange: number = state.currentWeight ? (startWeight - state.currentWeight) : 0
-    const displayedChange: string = weightChange > 0 ? `+${weightChange.toFixed(1)} lb` : weightChange < 0 ? `-${Math.abs(weightChange).toFixed(1)} lb` : `${weightChange.toFixed(1)} lb`
+    const displayedChange: string = weightChange > 0 ? `-${weightChange.toFixed(1)} lb` : weightChange < 0 ? `+${Math.abs(weightChange).toFixed(1)} lb` : `${weightChange.toFixed(1)} lb`
     const changeColor: string = weightChange > 0 ? 'text-[#EA4335]' : weightChange < 0 ? 'text-[#34A853]' : 'text-[#4B4B4B]'
 </script>
 
