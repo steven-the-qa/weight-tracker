@@ -34,7 +34,7 @@
 </script>
 
 <template>
-    <div class="h-[90%] grid grid-cols-auto grid-rows-6 p-5 text-xl font-bold text-black">
+    <div class="h-full grid grid-cols-auto grid-rows-6 p-5 text-xl font-bold text-black">
         <section class="flex justify-between items-start row-span-auto">
             <div data-testid="start-weight" class="flex flex-col items-center">
                 <p>Start</p>
@@ -49,12 +49,12 @@
                 <p class="text-[#4B4B4B]">{{ goalWeight }}</p>
             </div>
         </section>
-        <section class="flex justify-center items-center row-span-3">
+        <section class="flex justify-center items-center row-span-2">
             <!-- <div class="flex justify-center items-center h-44 w-72 bg-[#D9D9D9]">
                 TBD - Graph
             </div> -->
         </section>
-        <section class="flex justify-between items-end row-span-auto">
+        <section class="flex justify-between items-end row-span-2">
             <div data-testid="weight-change" class="flex flex-col justify-center items-center">
                 <p>Change</p>
                 <p :class="changeColor">{{ displayedChange }}</p>
