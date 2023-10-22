@@ -5,7 +5,7 @@
     import { getAuth } from 'firebase/auth'
     import type { User } from 'firebase/auth'
     import { doc, getDoc, getDocs, collection, query, orderBy, limit } from "firebase/firestore";
-    import type { DocumentReference, CollectionReference, DocumentSnapshot, DocumentData, Query } from 'firebase/firestore'
+    import type { DocumentReference, CollectionReference, DocumentData, Query } from 'firebase/firestore'
     import { db } from '../firebase'
     const user: User = getAuth().currentUser as User
 
