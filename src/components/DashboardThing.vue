@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import AddWeightButton from './AddWeightButton.vue'
+    import AddWeight from './AddWeight.vue'
     import { ref, reactive } from 'vue';
     import type { Ref } from 'vue'
     import { getAuth } from 'firebase/auth'
@@ -71,7 +71,7 @@
                 <p>Change</p>
                 <p :class="changeColor">{{ displayedChange }}</p>
             </div>
-            <AddWeightButton />
+            <AddWeight />
         </section>
     </div>
 </template>
