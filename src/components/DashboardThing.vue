@@ -9,35 +9,28 @@
     import { db } from '../firebase'
     const user: User = getAuth().currentUser as User
     const userRef: DocumentReference = doc(db, 'users', user.uid)
+    const userData: DocumentData = (await getDoc(userRef)).data() as DocumentData
+    let startWeight: number;
     const currentWeight: Ref<number | null> = ref(null)
     const goalWeight: Ref<number | null> = ref(null)
     const weightChange: Ref<number | null> = ref(null)
     const displayedChange: Ref<string> = ref('')
     const changeColor: Ref<string> = ref('')
-    const state = reactive({ currentWeight, goalWeight, weightChange, displayedChange, changeColor })
+    const state = reactive({ userData, currentWeight, goalWeight, weightChange, displayedChange, changeColor })
 
-    onMounted(() => {
-        onSnapshot(userRef, (userSnapshot) => {
-            const userData = userSnapshot.data() as DocumentData
-            state.currentWeight = userData.currentWeight
-            state.goalWeight = userData.goalWeight
-            state.weightChange = state.currentWeight ? (startWeight - state.currentWeight) : 0
-            state.displayedChange = state.weightChange > 0 ? `-${state.weightChange.toFixed(1)} lb` : state.weightChange < 0 ? `+${Math.abs(state.weightChange).toFixed(1)} lb` : `${state.weightChange.toFixed(1)} lb`
-            state.changeColor = state.weightChange < 0 ? 'text-[#EA4335]' : state.weightChange > 0 ? 'text-[#34A853]' : 'text-[#4B4B4B]'
-        })
-    })
-
-    const userData: DocumentData = (await getDoc(userRef)).data() as DocumentData
     const weightEntriesRef: CollectionReference = collection(userRef, 'weightEntries')
     const firstWeightEntryQ: Query = query(weightEntriesRef, orderBy('createdDate'), limit(1))
     const firstWeightEntry: DocumentData = (await getDocs(firstWeightEntryQ)).docs[0]
+    startWeight = firstWeightEntry.get('weight');
 
-    const startWeight: number = firstWeightEntry.get('weight');
-    state.currentWeight = userData.currentWeight
-    state.goalWeight = userData.goalWeight
-    state.weightChange = state.currentWeight ? (startWeight - state.currentWeight) : 0
-    state.displayedChange = state.weightChange > 0 ? `-${state.weightChange.toFixed(1)} lb` : state.weightChange < 0 ? `+${Math.abs(state.weightChange).toFixed(1)} lb` : `${state.weightChange.toFixed(1)} lb`
-    state.changeColor = state.weightChange > 0 ? 'text-[#EA4335]' : state.weightChange < 0 ? 'text-[#34A853]' : 'text-[#4B4B4B]'
+    onSnapshot(userRef, async (userSnapshot) => {
+        state.userData = (userSnapshot).data() as DocumentData
+        state.currentWeight = state.userData.currentWeight
+        state.goalWeight = state.userData.goalWeight
+        state.weightChange = state.currentWeight ? (startWeight - state.currentWeight) : 0
+        state.displayedChange = state.weightChange > 0 ? `-${state.weightChange.toFixed(1)} lb` : state.weightChange < 0 ? `+${Math.abs(state.weightChange).toFixed(1)} lb` : `${state.weightChange.toFixed(1)} lb`
+        state.changeColor = state.weightChange < 0 ? 'text-[#EA4335]' : state.weightChange > 0 ? 'text-[#34A853]' : 'text-[#4B4B4B]'
+    })
 </script>
 
 <template>
