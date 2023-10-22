@@ -26,23 +26,6 @@
     const weightChange: number = state.currentWeight ? (startWeight - state.currentWeight) : 0
     const displayedChange: string = weightChange > 0 ? `+${weightChange.toFixed(1)} lb` : weightChange < 0 ? `-${Math.abs(weightChange).toFixed(1)} lb` : `${weightChange.toFixed(1)} lb`
     const changeColor: string = weightChange > 0 ? 'text-[#EA4335]' : weightChange < 0 ? 'text-[#34A853]' : 'text-[#4B4B4B]'
-
-    const addWeight = async () => {
-        try {
-            if (user == null) return
-            await setDoc(userRef, {
-            currentWeight: state.currentWeight,
-            }, { merge: true })
-
-            await addDoc(weightEntriesRef, {
-            createdDate: serverTimestamp(),
-            weight: state.currentWeight
-            })
-        }
-        catch (e) {
-        console.error("Error adding document: ", e);
-        }
-    }
 </script>
 
 <template>
