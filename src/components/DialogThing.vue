@@ -12,7 +12,7 @@
     const currentWeight = ref(null)
     const state = reactive({ currentWeight })
     const closeDialog = () => {
-        document.getElementById('dialog')?.classList.replace('block', 'hidden')
+        document.getElementById('dialog-container')?.classList.replace('block', 'hidden')
         props.handleDialog && props.handleDialog()
     }
     const handleSubmit = async () => {
@@ -40,9 +40,9 @@
 
 
 <template>
-    <div id='dialog' class="hidden absolute inset-0 z-[100] bg-[#070707]">
-        <div class="flex justify-center items-center h-54 w-80 bg-white my-[50%] pl-5 rounded-xl">
-            <p :onclick="closeDialog" class="absolute top-2 right-[72px] my-[50%] text-2xl">✕</p>
+    <div id='dialog-container' class="hidden absolute top-0 left-0 h-full w-full z-[100] bg-gray-500 opacity-75 flex justify-center items-center">
+        <div data-testid='dialog-content' class="flex flex-col justify-center items-center h-54 w-80 bg-white my-[50%] pl-5 rounded-xl">
+            <p :onclick="closeDialog" class="inline-flex absolute top-[2rem] right-[2rem] text-2xl border border-red-500 border-1">✕</p>
             <form @submit.prevent="handleSubmit" class="flex flex-col justify-center items-start text-[#4B4B4B] text-lg w-full tracking-wide">
                 <div id="current-weight-group" class="flex flex-col mb-5 w-full">
                     <label class="mb-3 mt-6 text-xl font-normal" for="current-weight">{{ props.message }}</label>

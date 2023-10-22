@@ -3,7 +3,7 @@
     import { ref } from 'vue'
     const triggerState = ref(false)
     const handleDialog: VoidFunction = async () => {
-        const dialog: HTMLElement = document.getElementById('dialog') as HTMLElement
+        const dialog: HTMLElement = document.getElementById('dialog-container') as HTMLElement
         triggerState.value = !triggerState.value
         if (triggerState.value) {
             dialog.classList.replace('hidden', 'block')
