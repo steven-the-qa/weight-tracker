@@ -1,19 +1,32 @@
 <script setup lang="ts">
     import AddWeight from './AddWeight.vue'
-    import { ref, reactive } from 'vue';
+    import { ref, reactive, onMounted } from 'vue';
     import type { Ref } from 'vue'
     import { getAuth } from 'firebase/auth'
     import type { User } from 'firebase/auth'
-    import { doc, getDoc, getDocs, collection, query, orderBy, limit } from "firebase/firestore";
+    import { onSnapshot, doc, getDoc, getDocs, collection, query, orderBy, limit } from "firebase/firestore";
     import type { DocumentReference, CollectionReference, DocumentData, Query } from 'firebase/firestore'
     import { db } from '../firebase'
     const user: User = getAuth().currentUser as User
-
+    const userRef: DocumentReference = doc(db, 'users', user.uid)
     const currentWeight: Ref<number | null> = ref(null)
     const goalWeight: Ref<number | null> = ref(null)
-    const state = reactive({ currentWeight, goalWeight })
+    const weightChange: Ref<number | null> = ref(null)
+    const displayedChange: Ref<string> = ref('')
+    const changeColor: Ref<string> = ref('')
+    const state = reactive({ currentWeight, goalWeight, weightChange, displayedChange, changeColor })
 
-    const userRef: DocumentReference = doc(db, 'users', user.uid)
+    onMounted(() => {
+        onSnapshot(userRef, (userSnapshot) => {
+            const userData = userSnapshot.data() as DocumentData
+            state.currentWeight = userData.currentWeight
+            state.goalWeight = userData.goalWeight
+            state.weightChange = state.currentWeight ? (startWeight - state.currentWeight) : 0
+            state.displayedChange = state.weightChange > 0 ? `-${state.weightChange.toFixed(1)} lb` : state.weightChange < 0 ? `+${Math.abs(state.weightChange).toFixed(1)} lb` : `${state.weightChange.toFixed(1)} lb`
+            state.changeColor = state.weightChange < 0 ? 'text-[#EA4335]' : state.weightChange > 0 ? 'text-[#34A853]' : 'text-[#4B4B4B]'
+        })
+    })
+
     const userData: DocumentData = (await getDoc(userRef)).data() as DocumentData
     const weightEntriesRef: CollectionReference = collection(userRef, 'weightEntries')
     const firstWeightEntryQ: Query = query(weightEntriesRef, orderBy('createdDate'), limit(1))
@@ -22,9 +35,9 @@
     const startWeight: number = firstWeightEntry.get('weight');
     state.currentWeight = userData.currentWeight
     state.goalWeight = userData.goalWeight
-    const weightChange: number = state.currentWeight ? (startWeight - state.currentWeight) : 0
-    const displayedChange: string = weightChange > 0 ? `-${weightChange.toFixed(1)} lb` : weightChange < 0 ? `+${Math.abs(weightChange).toFixed(1)} lb` : `${weightChange.toFixed(1)} lb`
-    const changeColor: string = weightChange > 0 ? 'text-[#EA4335]' : weightChange < 0 ? 'text-[#34A853]' : 'text-[#4B4B4B]'
+    state.weightChange = state.currentWeight ? (startWeight - state.currentWeight) : 0
+    state.displayedChange = state.weightChange > 0 ? `-${state.weightChange.toFixed(1)} lb` : state.weightChange < 0 ? `+${Math.abs(state.weightChange).toFixed(1)} lb` : `${state.weightChange.toFixed(1)} lb`
+    state.changeColor = state.weightChange > 0 ? 'text-[#EA4335]' : state.weightChange < 0 ? 'text-[#34A853]' : 'text-[#4B4B4B]'
 </script>
 
 <template>
