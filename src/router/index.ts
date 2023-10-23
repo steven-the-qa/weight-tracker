@@ -68,11 +68,6 @@ router.beforeEach(async (to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     await getCurrentUser() ? next() : next('/login')
   }
-  else if (to.name == 'login') {
-    if (await getCurrentUser()) {
-      next('/')
-    }
-  }
   else {
     next()
   }
