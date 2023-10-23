@@ -35,5 +35,5 @@ const handleSignout = () => {
   </header>
 
   <RouterView />
-  <button v-if="$route.name != 'login' && isLoggedIn" class="bg-red-500 w-full flex justify-center items-center h-10 text-white" @click="handleSignout"> Sign out</button>
+  <button v-if="$route.name == 'dashboard' && isLoggedIn" class="bg-red-500 w-full flex justify-center items-center h-10 text-white" @click="handleSignout">Sign out</button>
 </template>
