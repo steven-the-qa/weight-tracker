@@ -6,6 +6,11 @@ module.exports = {
     fontFamily: {
       'Karla': ['Karla', 'sans-serif'],
       'Kanit': ['Kanit', 'sans-serif']
+    },
+    extend: {
+      screens: {
+        'xs': '450px'
+      }
     }
   },
   plugins: [require("daisyui")],
