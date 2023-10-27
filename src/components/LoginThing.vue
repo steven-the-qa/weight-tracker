@@ -9,9 +9,9 @@
         MyWeightTracker
       </h1>
     </header>
-    <div class="flex flex-col items-center lg:flex-row lg:items-start">
-      <div class="hidden lg:block w-[50%] h-[100vh] bg-[url('/src/assets/yoga.png')] bg-cover"></div>
-      <section class="w-full lg:w-[50%] flex flex-col justify-evenly h-[100vh]">
+    <div class="flex flex-col items-top lg:flex-row lg:items-start h-[100vh]">
+      <div class="hidden lg:block w-[50%] h-full bg-[url('/src/assets/yoga.png')] bg-cover"></div>
+      <section class="w-full lg:w-[50%] flex flex-col h-full justify-evenly">
         <div class="flex flex-col justify-between">
           <p data-testid="header-text" class="flex px-5 pb-3 bg-white text-black font-medium text-xl xs:text-2xl lg:text-3xl">
             Track your weight loss journey with ease and simplicity
