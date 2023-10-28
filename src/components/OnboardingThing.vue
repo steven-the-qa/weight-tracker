@@ -42,10 +42,10 @@ import router from '@/router';
     <div class="flex flex-col items-top lg:flex-row lg:items-start h-[100vh]">
       <div class="hidden lg:block w-[50%] h-full bg-[url('/src/assets/yoga.png')] bg-cover"></div>
       <section class="w-full lg:w-[50%] flex flex-col h-full justify-start items-start">
-        <p data-testid="header-text" class="flex justify-center p-5 bg-white text-black font-bold text-2xl w-full lg:text-3xl lg:justify-start">
-          Let's get started, Steven
+        <p data-testid="header-text" v-if="firstName" class="flex justify-center p-5 bg-white text-black font-bold text-2xl w-full lg:text-3xl lg:justify-start">
+          Let's get started, {{ firstName }}
         </p>
-        <!-- <p v-else>Not able to retrieve current user</p> -->
+        <p v-else>Not able to retrieve current user</p>
         <p class="ml-3 mb-20 text-xl tracking-wide lg:text-2xl lg:ml-5 lg:mb-5">Tell us a bit about yourself to set your goal and start tracking.</p>
         <form @submit.prevent="handleSubmit" class="flex flex-col justify-evenly text-[#4B4B4B] text-lg h-[50%] tracking-wide w-full lg:justify-start lg:ml-3">
           <div id="current-weight-group" class="flex flex-col mb-5 mx-3">
