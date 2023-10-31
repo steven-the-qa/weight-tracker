@@ -40,7 +40,7 @@
 
 
 <template>
-    <div id='dialog-container' class="hidden absolute top-0 left-0 h-full w-full z-[100] bg-gray-500 opacity-75 flex justify-center items-center">
+    <div id='dialog-container' class="hidden absolute top-0 left-0 h-full w-full z-[100] bg-gray-500 opacity-75 flex justify-center items-center min-w-[300px]">
         <div data-testid='dialog-content' class="relative flex flex-col justify-center items-center h-54 w-80 bg-white my-[50%] pl-5 rounded-xl">
             <p data-testid='close-dialog' :onclick="closeDialog" class="inline-flex absolute top-[1rem] right-[1rem] text-2xl">✕</p>
             <form @submit.prevent="handleSubmit" class="flex flex-col justify-center items-start text-[#4B4B4B] text-lg w-full tracking-wide">
