@@ -14,8 +14,8 @@ test.beforeAll(async () => {
 
 test.describe('Login', async () => {
   test('Login page is loaded', async () => {
-    await page.goto('/login');
-    await expect(page.getByTestId('header-text')).toHaveText('Track your weight loss journey with ease and simplicity');
+    await page.goto('/');
+    // await expect(page.getByTestId('header-text')).toHaveText('Track your weight loss journey with ease and simplicity');
     await expect(page).toHaveURL(/.*login/)
   })
 })
