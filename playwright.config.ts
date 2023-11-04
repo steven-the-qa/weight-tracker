@@ -37,8 +37,10 @@ const config: PlaywrightTestConfig = {
     /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
     actionTimeout: 0,
     /* Base URL to use in actions like `await page.goto('/')`. */
-    // baseURL: 'http://localhost:5173',
-    baseURL: 'https://dead-simple-weight-tracker.web.app',
+    // DEV
+    baseURL: 'http://127.0.0.1:5173',
+    // PROD
+    // baseURL: 'https://dead-simple-weight-tracker.web.app',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
