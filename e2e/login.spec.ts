@@ -1,4 +1,8 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, TestInfo } from '@playwright/test';
+
+test.afterEach(async ({page}, testInfo: TestInfo) => {
+  await page.screenshot({ path: `${testInfo.project.outputDir}/${testInfo.project.name}-${testInfo.title}.png`})
+})
 
 test.afterAll(async ({ browser }) => {
   await browser.close()
