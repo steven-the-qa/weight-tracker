@@ -38,7 +38,7 @@ const config: PlaywrightTestConfig = {
     actionTimeout: 0,
     /* Base URL to use in actions like `await page.goto('/')`. */
     // DEV
-    baseURL: 'http://127.0.0.1:5173',
+    baseURL: 'http://localhost:5173',
     // PROD
     // baseURL: 'https://dead-simple-weight-tracker.web.app',
 
@@ -71,7 +71,7 @@ const config: PlaywrightTestConfig = {
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'npm run dev',
+    command: 'npm run build',
     url: 'http://localhost:5173',
     timeout: 30000
   }
