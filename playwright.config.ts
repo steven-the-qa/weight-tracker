@@ -26,7 +26,7 @@ const config: PlaywrightTestConfig = {
   /* Retry on CI only */
   retries: 2,
   /* Opt out of parallel tests on CI. */
-  workers: 2,
+  workers: 4,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
     ['list'],
@@ -52,18 +52,30 @@ const config: PlaywrightTestConfig = {
   projects: [
     /* Desktop */
     {
-      name: 'chromium',
+      name: 'Desktop Chrome',
       use: {
         ...devices['Desktop Chrome'],
       }
     },
     /* Mobile */
     {
-      name: 'Mobile Chrome',
+      name: 'iPhone Chrome',
+      use: {
+        ...devices['iPhone 12'],
+      }
+    },
+    {
+      name: 'Pixel Chrome',
       use: {
         ...devices['Pixel 5'],
       },
     },
+    {
+      name: 'Galaxy Chrome',
+      use: {
+        ...devices['Galaxy S9+']
+      }
+    }
   ],
 
   /* Folder for test artifacts such as screenshots, videos, traces, etc. */
