@@ -27,5 +27,9 @@ coverage
 *.sln
 *.sw?
 
-test-results/
+playwright-artifacts/
 playwright-report/
+/playwright-artifacts/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

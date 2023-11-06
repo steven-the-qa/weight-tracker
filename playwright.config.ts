@@ -11,7 +11,7 @@ import { devices } from '@playwright/test'
  * See https://playwright.dev/docs/test-configuration.
  */
 const config: PlaywrightTestConfig = {
-  testDir: './e2e',
+  testDir: 'e2e',
   /* Maximum time one test can run for. */
   timeout: 30 * 1000,
   expect: {
@@ -24,88 +24,68 @@ const config: PlaywrightTestConfig = {
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
-  retries: process.env.CI ? 2 : 0,
+  retries: 2,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  workers: 4,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  reporter: [
+    ['list'],
+    ['html', { open: 'never' }]
+  ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
     actionTimeout: 0,
     /* Base URL to use in actions like `await page.goto('/')`. */
+    // DEV
     baseURL: 'http://localhost:5173',
+    // PROD
+    // baseURL: 'https://dead-simple-weight-tracker.web.app',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
-
-    /* Only on CI systems run the tests headless */
-    headless: !!process.env.CI
+    headless: process.env.CI ? true : false,
+    testIdAttribute: 'data-testid'
   },
 
   /* Configure projects for major browsers */
   projects: [
+    /* Desktop */
     {
-      name: 'chromium',
+      name: 'Desktop Chrome',
       use: {
-        ...devices['Desktop Chrome']
+        ...devices['Desktop Chrome'],
+      }
+    },
+    /* Mobile */
+    {
+      name: 'iPhone Chrome',
+      use: {
+        ...devices['iPhone 12'],
       }
     },
     {
-      name: 'firefox',
+      name: 'Pixel Chrome',
       use: {
-        ...devices['Desktop Firefox']
-      }
+        ...devices['Pixel 5'],
+      },
     },
     {
-      name: 'webkit',
+      name: 'Galaxy Chrome',
       use: {
-        ...devices['Desktop Safari']
+        ...devices['Galaxy S9+']
       }
     }
-
-    /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: {
-    //     ...devices['Pixel 5'],
-    //   },
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: {
-    //     ...devices['iPhone 12'],
-    //   },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: {
-    //     channel: 'msedge',
-    //   },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: {
-    //     channel: 'chrome',
-    //   },
-    // },
   ],
 
   /* Folder for test artifacts such as screenshots, videos, traces, etc. */
-  // outputDir: 'test-results/',
+  outputDir: 'playwright-artifacts',
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    /**
-     * Use the dev server by default for faster feedback loop.
-     * Use the preview server on CI for more realistic testing.
-    Playwright will re-use the local server if there is already a dev-server running.
-     */
-    command: process.env.CI ? 'vite preview --port 5173' : 'vite dev',
-    port: 5173,
-    reuseExistingServer: !process.env.CI
+    command: 'npm run dev',
+    url: 'http://localhost:5173',
+    timeout: 30000
   }
 }
 
