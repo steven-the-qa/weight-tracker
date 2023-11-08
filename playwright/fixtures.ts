@@ -27,12 +27,12 @@ export const test = baseTest.extend<{}, { workerStorageState: string }>({
     // Make sure that accounts are unique, so that multiple team members
     // can run tests at the same time without interference.
     const automationTestAccounts = [
-        { email: 'User1', password: 'User1'},
-        { email: 'User2', password: 'User2'},
-        { email: 'User3', password: 'User3'},
-        { email: 'User4', password: 'User4'},
+        { email: 'wtappuser1@gmail.com', password: 'WTAppUser123!'},
+        { email: 'wtappuser2@gmail.com', password: 'WTAppUser123!'},
+        { email: 'wtappuser3@gmail.com', password: 'WTAppUser123!'},
+        { email: 'wtappuser4@gmail.com', password: 'WTAppUser123!'},
     ]
-    const workerTestAccount = await automationTestAccounts[id];
+    const workerTestAccount = automationTestAccounts[id];
 
     // Perform authentication steps.
 
