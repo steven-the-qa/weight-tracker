@@ -2,6 +2,7 @@ import { test as baseTest } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
 require('dotenv').config()
+const baseURL = 'http://localhost:5173'
 
 export * from '@playwright/test';
 export const test = baseTest.extend<{}, { workerStorageState: string }>({
@@ -57,16 +58,15 @@ export const test = baseTest.extend<{}, { workerStorageState: string }>({
             await page.locator('button >> nth=1').click();
         }
     }
-
-    await page.goto('/');
-    await page.waitForURL('/login')
+    await page.goto(`${baseURL}/`);
+    await page.waitForURL(`${baseURL}/login`)
     await page.getByTestId('sign_in_with_google').click()
     await trickGoogle()
     // Wait until the page receives the cookies.
     //
     // Sometimes login flow sets cookies in the process of several redirects.
     // Wait for the final URL to ensure that the cookies are actually set.
-    await page.waitForURL('/onboarding');
+    await page.waitForURL(`${baseURL}/onboarding`);
 
     // End of authentication steps.
 
