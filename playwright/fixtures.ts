@@ -28,10 +28,10 @@ export const test = baseTest.extend<{}, { workerStorageState: string }>({
     // Make sure that accounts are unique, so that multiple team members
     // can run tests at the same time without interference.
     const automationTestAccounts = [
-        { email: process.env.USER1_EMAIL, password: process.env.USER1_PASSWORD },
-        { email: process.env.USER2_EMAIL, password: process.env.USER2_PASSWORD },
-        { email: process.env.USER3_EMAIL, password: process.env.USER3_PASSWORD },
-        { email: process.env.USER4_EMAIL, password: process.env.USER4_PASSWORD },
+        { email: `${process.env.USER1_EMAIL}`, password: `${process.env.USER1_PASSWORD}` },
+        { email: `${process.env.USER2_EMAIL}`, password: `${process.env.USER2_PASSWORD}` },
+        { email: `${process.env.USER3_EMAIL}`, password: `${process.env.USER3_PASSWORD}` },
+        { email: `${process.env.USER4_EMAIL}`, password: `${process.env.USER4_PASSWORD}` },
     ]
     const workerTestAccount = automationTestAccounts[id];
 
