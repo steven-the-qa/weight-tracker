@@ -1,6 +1,7 @@
 import { test as baseTest } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
+require('dotenv').config()
 
 export * from '@playwright/test';
 export const test = baseTest.extend<{}, { workerStorageState: string }>({
@@ -27,10 +28,10 @@ export const test = baseTest.extend<{}, { workerStorageState: string }>({
     // Make sure that accounts are unique, so that multiple team members
     // can run tests at the same time without interference.
     const automationTestAccounts = [
-        { email: 'wtappuser1@gmail.com', password: 'WTAppUser123!'},
-        { email: 'wtappuser2@gmail.com', password: 'WTAppUser123!'},
-        { email: 'wtappuser3@gmail.com', password: 'WTAppUser123!'},
-        { email: 'wtappuser4@gmail.com', password: 'WTAppUser123!'},
+        { email: process.env.USER1_EMAIL, password: process.env.USER1_PASSWORD },
+        { email: process.env.USER2_EMAIL, password: process.env.USER2_PASSWORD },
+        { email: process.env.USER3_EMAIL, password: process.env.USER3_PASSWORD },
+        { email: process.env.USER4_EMAIL, password: process.env.USER4_PASSWORD },
     ]
     const workerTestAccount = automationTestAccounts[id];
 
