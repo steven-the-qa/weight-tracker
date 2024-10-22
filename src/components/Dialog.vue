@@ -50,6 +50,10 @@
 
       // Allow numbers
       if (/^[0-9]$/.test(key)) {
+        const newValue = currentValue + key;
+        if (parseFloat(newValue) > 1000) {
+          event.preventDefault();
+        }
         return;
       }
 
@@ -60,6 +64,21 @@
 
       // Prevent default for any other key
       event.preventDefault();
+    }
+
+    const formatInput = (event: Event) => {
+      const input = event.target as HTMLInputElement;
+      let value = input.value;
+      const parts = value.split('.');
+      if (parts.length > 1) {
+        parts[1] = parts[1].slice(0, 1);
+        value = parts.join('.');
+      }
+      const numValue = parseFloat(value);
+      if (numValue > 1000) {
+        value = '1000';
+      }
+      input.value = value;
     }
 </script>
 
@@ -74,13 +93,14 @@
                     <input
                         v-model="currentWeight"
                         @keydown="filterInput"
+                        @input="formatInput"
                         class="no-spinner placeholder:text-[#BDBDBD] h-14 pl-3 mr-10 rounded-lg bg-white border border-[#BDBDBD]"
                         type="text"
                         id="current-weight"
                         name="current-weight"
                         min="0.1"
                         step="0.1"
-                        pattern="^\d+(\.\d{1})?$"
+                        pattern="^\d+(\.\d{0,1})?$"
                         placeholder="enter current weight"
                         required
                     >
