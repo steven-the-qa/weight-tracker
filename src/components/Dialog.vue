@@ -81,7 +81,7 @@
                         min="0.1"
                         step="0.1"
                         pattern="^\d+(\.\d{1})?$"
-                        placeholder="enter current weight (e.g., 70.5)"
+                        placeholder="enter current weight"
                         required
                     >
                 </div>
