@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
     import AddWeight from './AddWeight.vue'
     import { ref, reactive } from 'vue';
