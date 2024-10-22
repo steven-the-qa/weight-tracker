@@ -43,64 +43,6 @@ const handleLogout = () => {
     console.error("Error signing out: ", error);
   });
 }
-
-const filterInput = (event: KeyboardEvent) => {
-  const input = event.target as HTMLInputElement;
-  const currentValue = input.value;
-  const key = event.key;
-
-  // Allow Tab key for navigation
-  if (key === 'Tab') {
-    return;
-  }
-
-  // Allow backspace and arrow keys
-  if (key === 'Backspace' || key === 'ArrowLeft' || key === 'ArrowRight') {
-    return;
-  }
-
-  // Allow numbers
-  if (/^[0-9]$/.test(key)) {
-    const newValue = currentValue + key;
-    if (parseFloat(newValue) > 1000) {
-      event.preventDefault();
-    }
-    return;
-  }
-
-  // Allow decimal point only if it doesn't exist and there's a number before it
-  if (key === '.' && !currentValue.includes('.') && currentValue.length > 0) {
-    return;
-  }
-
-  // Prevent default for any other key
-  event.preventDefault();
-}
-
-const formatInput = (event: Event) => {
-  const input = event.target as HTMLInputElement;
-  let value = input.value;
-  const parts = value.split('.');
-  if (parts.length > 1) {
-    // Keep only one decimal place
-    parts[1] = parts[1].slice(0, 1);
-    value = parts.join('.');
-  }
-  const numValue = parseFloat(value);
-  if (numValue > 1000) {
-    value = '1000';
-  }
-  input.value = value;
-}
-
-const handleBlur = (event: Event) => {
-  const input = event.target as HTMLInputElement;
-  let value = input.value;
-  if (value.endsWith('.')) {
-    value += '0';
-  }
-  input.value = value;
-}
 </script>
 
 <template>
@@ -125,41 +67,27 @@ const handleBlur = (event: Event) => {
           <form @submit.prevent="handleSubmit" class="flex flex-col justify-evenly text-[#4B4B4B] text-lg tracking-wide w-full lg:justify-start lg:ml-3">
             <div id="current-weight-group" class="flex flex-col mb-5 mx-3">
               <label class="" for="current-weight">What's your current weight?</label>
-              <input
+              <NumberInput
                 v-model="currentWeight"
-                @keydown="filterInput"
-                @input="formatInput"
-                @blur="handleBlur"
-                class="no-spinner placeholder:text-[#BDBDBD] h-14 pl-3 mr-5 rounded-lg bg-white border border-[#BDBDBD] lg:w-[50%]"
-                type="text"
                 id="current-weight"
                 name="current-weight"
-                min="0.1"
-                step="0.1"
-                pattern="^\d+(\.\d{0,1})?$"
                 placeholder="enter current weight"
-                required
-                tabindex="0"
-              >
+                :min="0.1"
+                :max="1000"
+                class="lg:w-[50%]"
+              />
             </div>
             <div id="goal-weight-group" class="flex flex-col mx-3">
               <label for="goal-weight">What's your goal weight?</label>
-              <input
+              <NumberInput
                 v-model="goalWeight"
-                @keydown="filterInput"
-                @input="formatInput"
-                @blur="handleBlur"
-                class="no-spinner placeholder:text-[#BDBDBD] h-14 pl-3 mr-5 rounded-lg bg-white border border-[#BDBDBD] lg:w-[75%]"
-                type="text"
                 id="goal-weight"
                 name="goal-weight"
-                min="0.1"
-                step="0.1"
-                pattern="^\d+(\.\d{0,1})?$"
                 placeholder="enter goal weight"
-                required
-                tabindex="0"
-              >
+                :min="0.1"
+                :max="1000"
+                class="lg:w-[75%]"
+              />
             </div>
             <input class="mt-5 bg-[#2058E8] py-4 px-5 mx-3 rounded-xl text-white font-semibold lg:w-[20%]" type="submit" value="Continue">
           </form>
