@@ -43,6 +43,11 @@
       const currentValue = input.value;
       const key = event.key;
 
+      // Allow Tab key for navigation
+      if (key === 'Tab') {
+        return;
+      }
+
       // Allow backspace and arrow keys
       if (key === 'Backspace' || key === 'ArrowLeft' || key === 'ArrowRight') {
         return;
@@ -71,12 +76,22 @@
       let value = input.value;
       const parts = value.split('.');
       if (parts.length > 1) {
+        // Keep only one decimal place
         parts[1] = parts[1].slice(0, 1);
         value = parts.join('.');
       }
       const numValue = parseFloat(value);
       if (numValue > 1000) {
         value = '1000';
+      }
+      input.value = value;
+    }
+
+    const handleBlur = (event: Event) => {
+      const input = event.target as HTMLInputElement;
+      let value = input.value;
+      if (value.endsWith('.')) {
+        value += '0';
       }
       input.value = value;
     }
@@ -94,6 +109,7 @@
                         v-model="currentWeight"
                         @keydown="filterInput"
                         @input="formatInput"
+                        @blur="handleBlur"
                         class="no-spinner placeholder:text-[#BDBDBD] h-14 pl-3 mr-10 rounded-lg bg-white border border-[#BDBDBD]"
                         type="text"
                         id="current-weight"
@@ -103,6 +119,7 @@
                         pattern="^\d+(\.\d{0,1})?$"
                         placeholder="enter current weight"
                         required
+                        tabindex="0"
                     >
                 </div>
                 <input class="mt-auto mb-5 bg-[#2058E8] py-4 w-[87%] rounded-xl text-white font-semibold cursor-pointer" type="submit" value="Add weight" onsubmit="">

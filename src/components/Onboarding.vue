@@ -49,6 +49,11 @@ const filterInput = (event: KeyboardEvent) => {
   const currentValue = input.value;
   const key = event.key;
 
+  // Allow Tab key for navigation
+  if (key === 'Tab') {
+    return;
+  }
+
   // Allow backspace and arrow keys
   if (key === 'Backspace' || key === 'ArrowLeft' || key === 'ArrowRight') {
     return;
@@ -77,12 +82,22 @@ const formatInput = (event: Event) => {
   let value = input.value;
   const parts = value.split('.');
   if (parts.length > 1) {
+    // Keep only one decimal place
     parts[1] = parts[1].slice(0, 1);
     value = parts.join('.');
   }
   const numValue = parseFloat(value);
   if (numValue > 1000) {
     value = '1000';
+  }
+  input.value = value;
+}
+
+const handleBlur = (event: Event) => {
+  const input = event.target as HTMLInputElement;
+  let value = input.value;
+  if (value.endsWith('.')) {
+    value += '0';
   }
   input.value = value;
 }
@@ -114,6 +129,7 @@ const formatInput = (event: Event) => {
                 v-model="currentWeight"
                 @keydown="filterInput"
                 @input="formatInput"
+                @blur="handleBlur"
                 class="no-spinner placeholder:text-[#BDBDBD] h-14 pl-3 mr-5 rounded-lg bg-white border border-[#BDBDBD] lg:w-[50%]"
                 type="text"
                 id="current-weight"
@@ -123,6 +139,7 @@ const formatInput = (event: Event) => {
                 pattern="^\d+(\.\d{0,1})?$"
                 placeholder="enter current weight"
                 required
+                tabindex="0"
               >
             </div>
             <div id="goal-weight-group" class="flex flex-col mx-3">
@@ -131,6 +148,7 @@ const formatInput = (event: Event) => {
                 v-model="goalWeight"
                 @keydown="filterInput"
                 @input="formatInput"
+                @blur="handleBlur"
                 class="no-spinner placeholder:text-[#BDBDBD] h-14 pl-3 mr-5 rounded-lg bg-white border border-[#BDBDBD] lg:w-[75%]"
                 type="text"
                 id="goal-weight"
@@ -140,6 +158,7 @@ const formatInput = (event: Event) => {
                 pattern="^\d+(\.\d{0,1})?$"
                 placeholder="enter goal weight"
                 required
+                tabindex="0"
               >
             </div>
             <input class="mt-5 bg-[#2058E8] py-4 px-5 mx-3 rounded-xl text-white font-semibold lg:w-[20%]" type="submit" value="Continue">
