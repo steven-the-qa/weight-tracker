@@ -37,6 +37,30 @@
             console.error("Error adding document: ", e);
         }
     }
+
+    const filterInput = (event: KeyboardEvent) => {
+      const input = event.target as HTMLInputElement;
+      const currentValue = input.value;
+      const key = event.key;
+
+      // Allow backspace and arrow keys
+      if (key === 'Backspace' || key === 'ArrowLeft' || key === 'ArrowRight') {
+        return;
+      }
+
+      // Allow numbers
+      if (/^[0-9]$/.test(key)) {
+        return;
+      }
+
+      // Allow decimal point only if it doesn't exist and there's a number before it
+      if (key === '.' && !currentValue.includes('.') && currentValue.length > 0) {
+        return;
+      }
+
+      // Prevent default for any other key
+      event.preventDefault();
+    }
 </script>
 
 
@@ -47,8 +71,19 @@
             <form @submit.prevent="handleSubmit" class="flex flex-col justify-center items-start text-[#4B4B4B] text-lg w-full tracking-wide">
                 <div id="current-weight-group" class="flex flex-col mb-5 w-full">
                     <label class="mb-3 mt-6 text-xl font-normal" for="current-weight">{{ props.message }}</label>
-                    <input v-model="currentWeight" class="placeholder:text-[#BDBDBD] h-14 pl-3 mr-10 rounded-lg bg-white border border-[#BDBDBD]"
-                        type="number" id="current-weight" name="current-weight" step="0.1" placeholder="enter current weight" required>
+                    <input
+                        v-model="currentWeight"
+                        @keydown="filterInput"
+                        class="no-spinner placeholder:text-[#BDBDBD] h-14 pl-3 mr-10 rounded-lg bg-white border border-[#BDBDBD]"
+                        type="text"
+                        id="current-weight"
+                        name="current-weight"
+                        min="0.1"
+                        step="0.1"
+                        pattern="^\d+(\.\d{1})?$"
+                        placeholder="enter current weight (e.g., 70.5)"
+                        required
+                    >
                 </div>
                 <input class="mt-auto mb-5 bg-[#2058E8] py-4 w-[87%] rounded-xl text-white font-semibold cursor-pointer" type="submit" value="Add weight" onsubmit="">
             </form>
