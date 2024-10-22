@@ -5,6 +5,7 @@ import { getAuth, signOut } from 'firebase/auth'
 import { doc, serverTimestamp, setDoc, collection, DocumentReference, CollectionReference, addDoc} from "firebase/firestore";
 import { db } from '../firebase'
 import router from '@/router';
+import NumberInput from "../components/NumberInput.vue";
 
 const user = getAuth().currentUser
 const firstName = user?.displayName?.split(' ')[0]

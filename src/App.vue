@@ -66,5 +66,4 @@ const saveSettings = (settings: { goalWeight: number | undefined; unit: 'LB' | '
   />
 
   <RouterView class="min-w-[300px]"/>
-  <button v-if="$route.name == 'dashboard' && isLoggedIn" class="bg-red-500 w-full flex justify-center items-center h-10 text-white min-w-[300px]" @click="handleSignout">Sign out</button>
 </template>
