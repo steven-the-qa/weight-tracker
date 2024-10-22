@@ -1,9 +1,9 @@
 <script setup lang="ts">
-  import LoginThing from '../components/LoginThing.vue'
+  import Login from '../components/Login.vue'
 </script>
 
 <template>
   <main class="bg-white text-black">
-    <LoginThing />
+    <Login />
   </main>
 </template>
