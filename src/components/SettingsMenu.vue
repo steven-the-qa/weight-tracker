@@ -80,7 +80,7 @@ const updateGoalWeight = async () => {
       class="border rounded w-full py-2 px-3 mb-4"
     />
     <button @click="updateGoalWeight" class="bg-blue-500 text-white py-2 px-4 rounded">Update Goal</button>
-    <div class="flex mb-4">
+    <div class="flex mt-4">
       <button @click="setUnit('LB')" :class="{'bg-purple-500 text-white': unit === 'LB', 'bg-gray-200': unit !== 'LB'}" class="flex-1 py-2 rounded-l">LB</button>
       <button @click="setUnit('KG')" :class="{'bg-purple-500 text-white': unit === 'KG', 'bg-gray-200': unit !== 'KG'}" class="flex-1 py-2 rounded-r">KG</button>
     </div>
