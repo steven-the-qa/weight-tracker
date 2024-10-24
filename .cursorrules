@@ -1,0 +1,7 @@
+#1 Always put the <script> tag above the <template> tag.
+#2 Don't include a <style> tag unless I ask you to. Use TailwindCSS instead.
+#3 Use TailwindCSS classes for styling.
+#4 Use the <script setup> syntax for the <script> tag.
+#5 Use the v-model directive for two-way binding.
+#6 Use the ref function to create reactive references.
+#7 Use the watch function to watch for changes in reactive references.
