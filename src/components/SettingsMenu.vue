@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import NumberInput from './NumberInput.vue'; // Import the NumberInput component
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '../firebase';
+import { getAuth } from 'firebase/auth';
 
 const props = defineProps({
   isMenuOpen: Boolean,
@@ -20,8 +23,24 @@ const handleSignout = () => {
   emit('handleSignout'); // Emit the handleSignout event
 };
 
-const setUnit = (newUnit: 'LB' | 'KG') => {
+const setUnit = async (newUnit: 'LB' | 'KG') => {
   emit('setUnit', newUnit);
+
+  // Get the current user
+  const user = getAuth().currentUser;
+  if (user) {
+    try {
+      // Reference to the user's document in Firestore
+      const userRef = doc(db, 'users', user.uid);
+
+      // Update the unit of measure in the user's document
+      await updateDoc(userRef, {
+        unitOfMeasure: newUnit
+      });
+    } catch (error) {
+      console.error("Error updating unit of measure: ", error);
+    }
+  }
 };
 </script>
 
@@ -37,7 +56,6 @@ const setUnit = (newUnit: 'LB' | 'KG') => {
       <button @click="toggleMenu" class="text-black">✕</button>
     </header>
     <label for="goal-weight" class="block text-gray-700 mt-4">What’s your goal weight?</label>
-    <!-- Use the NumberInput component here -->
     <NumberInput 
       id="goal-weight" 
       v-model="goalWeight" 
