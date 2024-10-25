@@ -4,13 +4,15 @@ import { onMounted, ref } from 'vue';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth'
 import router from './router';
 import SettingsMenu from './components/SettingsMenu.vue'; // Import the SettingsMenu component
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from './firebase';
 
 const isLoggedIn = ref(false);
 const isMenuOpen = ref(false); // State to track menu visibility
 let auth: any;
 let pfp: string | undefined;
 const goalWeight = ref<number | undefined>(undefined); // State for goal weight
-const unit = ref<'LB' | 'KG'>('LB'); // State for unit, defaulting to 'LB'
+const unit = ref<'lb' | 'kg'>('lb'); // Default to 'lb'
 
 onMounted(() => {
   auth = getAuth();
@@ -36,15 +38,27 @@ const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value; // Toggle menu visibility
 };
 
-const setUnit = (newUnit: 'LB' | 'KG') => {
+const setUnit = (newUnit: 'lb' | 'kg') => {
   unit.value = newUnit; // Update the unit state
 };
 
-const saveSettings = (settings: { goalWeight: number | undefined; unit: 'LB' | 'KG' }) => {
+const saveSettings = (settings: { goalWeight: number | undefined; unit: 'lb' | 'kg' }) => {
   goalWeight.value = settings.goalWeight; // Update goal weight
   unit.value = settings.unit; // Update unit
   console.log(`Goal Weight: ${goalWeight.value}, Unit: ${unit.value}`);
 };
+
+onMounted(async () => {
+  const user = getAuth().currentUser;
+  if (user) {
+    const userRef = doc(db, 'users', user.uid);
+    const userDoc = await getDoc(userRef);
+    const userData = userDoc.data();
+    if (userData && userData.unitOfMeasure) {
+      unit.value = userData.unitOfMeasure;
+    }
+  }
+});
 </script>
 
 <template>

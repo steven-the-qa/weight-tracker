@@ -1,12 +1,12 @@
 <script setup lang="ts">
   import LoadingView from './LoadingView.vue'
   import AddWeight from '../components/AddWeight.vue'
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, onUnmounted } from 'vue';
   import type { Ref } from 'vue'
   import { getAuth } from 'firebase/auth'
   import type { User } from 'firebase/auth'
-  import { onSnapshot, doc, getDocs, collection, query, orderBy, limit } from "firebase/firestore";
-  import type { DocumentReference, CollectionReference, DocumentData, Query } from 'firebase/firestore'
+  import { onSnapshot, doc, getDocs, collection, query, orderBy, limit, getDoc } from "firebase/firestore";
+  import type { DocumentReference, CollectionReference, DocumentData, Query, Unsubscribe } from 'firebase/firestore'
   import { db } from '../firebase'
 
   interface WeightEntry {
@@ -23,6 +23,7 @@
   const displayedChange: Ref<string> = ref('')
   const changeColor: Ref<string> = ref('')
   const isLoading: Ref<boolean> = ref(true)
+  const userListener: Ref<Unsubscribe | null> = ref(null)
 
   const displayWeight = (entry: WeightEntry | null): string => {
     return entry ? `${entry.weight} ${entry.unit}` : '--'
@@ -36,12 +37,21 @@
       const userRef: DocumentReference = doc(db, 'users', user.value.uid)
       const weightEntriesRef: CollectionReference = collection(userRef, 'weightEntries')
 
-      // Fetch start weight (first entry)
-      const firstWeightEntryQ: Query = query(weightEntriesRef, orderBy('createdDate'), limit(1))
-      const firstWeightEntrySnapshot = await getDocs(firstWeightEntryQ)
-      if (!firstWeightEntrySnapshot.empty) {
-        startWeight.value = firstWeightEntrySnapshot.docs[0].data() as WeightEntry
-      }
+      // Set up listener for user document
+      userListener.value = onSnapshot(userRef, (userSnapshot) => {
+        const userData = userSnapshot.data() as DocumentData
+        if (userData && userData.startingWeight) {
+          startWeight.value = userData.startingWeight as WeightEntry
+        } else {
+          // Fetch start weight (first entry) if startingWeight is not set
+          getDocs(query(weightEntriesRef, orderBy('createdDate'), limit(1)))
+            .then((firstWeightEntrySnapshot) => {
+              if (!firstWeightEntrySnapshot.empty) {
+                startWeight.value = firstWeightEntrySnapshot.docs[0].data() as WeightEntry
+              }
+            })
+        }
+      })
 
       // Set up listener for new weight entries
       onSnapshot(query(weightEntriesRef, orderBy('createdDate', 'desc'), limit(1)), (snapshot) => {
@@ -64,6 +74,12 @@
     } catch (error) {
       console.error('Error loading dashboard:', error)
       isLoading.value = false
+    }
+  })
+
+  onUnmounted(() => {
+    if (userListener.value) {
+      userListener.value()
     }
   })
 

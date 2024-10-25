@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import NumberInput from './NumberInput.vue'; // Import the NumberInput component
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { getAuth } from 'firebase/auth';
 
 const props = defineProps({
   isMenuOpen: Boolean,
   goalWeight: Number,
-  unit: String,
+  unit: {
+    type: String as () => 'lb' | 'kg',
+    required: true
+  },
 });
 
 const emit = defineEmits(['toggleMenu', 'setUnit', 'saveSettings', 'handleSignout']);
@@ -19,12 +22,34 @@ const toggleMenu = () => {
 
 const goalWeight = ref<number | null>(props.goalWeight ?? null); // Initialize goalWeight to null if undefined
 const tempGoalWeight = ref<number | null>(goalWeight.value);
+const startingWeight = ref<number | null>(null);
+const tempStartingWeight = ref<number | null>(null);
+
+const currentUnit = ref(props.unit);
+
+watch(() => props.unit, (newUnit) => {
+  currentUnit.value = newUnit;
+});
+
+onMounted(async () => {
+  const user = getAuth().currentUser;
+  if (user) {
+    const userRef = doc(db, 'users', user.uid);
+    const userDoc = await getDoc(userRef);
+    const userData = userDoc.data();
+    if (userData && userData.startingWeight) {
+      startingWeight.value = userData.startingWeight.weight;
+      tempStartingWeight.value = startingWeight.value;
+    }
+  }
+});
 
 const handleSignout = () => {
   emit('handleSignout'); // Emit the handleSignout event
 };
 
-const setUnit = async (newUnit: 'LB' | 'KG') => {
+const setUnit = async (newUnit: 'lb' | 'kg') => {
+  currentUnit.value = newUnit;
   emit('setUnit', newUnit);
 
   // Get the current user
@@ -45,20 +70,35 @@ const setUnit = async (newUnit: 'LB' | 'KG') => {
 };
 
 const updateGoalWeight = async () => {
-  console.log('Updating goal weight:', tempGoalWeight.value);
-  goalWeight.value = tempGoalWeight.value;
-  emit('saveSettings', { goalWeight: goalWeight.value, unit: props.unit });
-
   const user = getAuth().currentUser;
-  if (user) {
+  if (user && tempGoalWeight.value !== null) {
     try {
       const userRef = doc(db, 'users', user.uid);
       await updateDoc(userRef, {
-        goalWeight: { weight: goalWeight.value, unit: props.unit, createdDate: new Date() }
+        goalWeight: { weight: tempGoalWeight.value, unit: props.unit, createdDate: new Date() }
       });
+      goalWeight.value = tempGoalWeight.value;
+      emit('saveSettings', { goalWeight: goalWeight.value, unit: props.unit });
       console.log('Goal weight updated in Firebase');
     } catch (error) {
       console.error("Error updating goal weight: ", error);
+    }
+  }
+};
+
+const updateStartingWeight = async () => {
+  const user = getAuth().currentUser;
+  if (user && tempStartingWeight.value !== null) {
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, {
+        startingWeight: { weight: tempStartingWeight.value, unit: props.unit, createdDate: new Date() }
+      });
+      startingWeight.value = tempStartingWeight.value;
+      emit('saveSettings', { startingWeight: startingWeight.value, unit: props.unit });
+      console.log('Starting weight updated in Firebase');
+    } catch (error) {
+      console.error("Error updating starting weight: ", error);
     }
   }
 };
@@ -70,19 +110,51 @@ const updateGoalWeight = async () => {
       <h1 class="text-xl">Settings</h1>
       <button @click="toggleMenu" class="text-black">✕</button>
     </header>
-    <label for="goal-weight" class="block text-gray-700 mt-4">What’s your goal weight?</label>
-    <NumberInput
-      id="goal-weight"
-      v-model="tempGoalWeight"
-      placeholder="150"
-      :min="1"
-      :max="1000"
-      class="border rounded w-full py-2 px-3 mb-4"
-    />
-    <button @click="updateGoalWeight" class="bg-blue-500 text-white py-2 px-4 rounded">Update Goal</button>
+    <label for="goal-weight" class="block text-gray-700 mt-4">Goal Weight</label>
+    <div class="flex items-center">
+      <NumberInput
+        id="goal-weight"
+        v-model="tempGoalWeight"
+        placeholder="New goal"
+        :min="1"
+        :max="1000"
+        class="border rounded w-full py-2 px-3 mb-4 flex-grow"
+      />
+      <button @click="updateGoalWeight" class="bg-blue-500 text-white py-2 px-4 rounded ml-2">Update</button>
+    </div>
+    <label for="starting-weight" class="block text-gray-700 mt-4">Starting Weight</label>
+    <div class="flex items-center">
+      <NumberInput
+        id="starting-weight"
+        v-model="tempStartingWeight"
+        placeholder="New start"
+        :min="1"
+        :max="1000"
+        class="border rounded w-full py-2 px-3 mb-4 flex-grow"
+      />
+      <button @click="updateStartingWeight" class="bg-blue-500 text-white py-2 px-4 rounded ml-2">Update</button>
+    </div>
     <div class="flex mt-4">
-      <button @click="setUnit('LB')" :class="{'bg-purple-500 text-white': unit === 'LB', 'bg-gray-200': unit !== 'LB'}" class="flex-1 py-2 rounded-l">LB</button>
-      <button @click="setUnit('KG')" :class="{'bg-purple-500 text-white': unit === 'KG', 'bg-gray-200': unit !== 'KG'}" class="flex-1 py-2 rounded-r">KG</button>
+      <button 
+        @click="setUnit('lb')" 
+        :class="{
+          'bg-blue-500 text-white': currentUnit === 'lb', 
+          'bg-gray-200 text-gray-700': currentUnit !== 'lb'
+        }" 
+        class="flex-1 py-2 rounded-l"
+      >
+        lb
+      </button>
+      <button 
+        @click="setUnit('kg')" 
+        :class="{
+          'bg-blue-500 text-white': currentUnit === 'kg', 
+          'bg-gray-200 text-gray-700': currentUnit !== 'kg'
+        }" 
+        class="flex-1 py-2 rounded-r"
+      >
+        kg
+      </button>
     </div>
     <button @click="handleSignout" class="text-blue-500 mt-4">Log out</button>
   </div>
