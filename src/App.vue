@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth'
 import router from './router';
 import SettingsMenu from './components/SettingsMenu.vue'; // Import the SettingsMenu component
@@ -14,12 +14,25 @@ let pfp: string | undefined;
 const goalWeight = ref<number | undefined>(undefined); // State for goal weight
 const unit = ref<'lb' | 'kg'>('lb'); // Default to 'lb'
 
+const fetchUserSettings = async () => {
+  const user = getAuth().currentUser;
+  if (user) {
+    const userRef = doc(db, 'users', user.uid);
+    const userDoc = await getDoc(userRef);
+    const userData = userDoc.data();
+    if (userData && userData.unitOfMeasure) {
+      unit.value = userData.unitOfMeasure;
+    }
+  }
+};
+
 onMounted(() => {
   auth = getAuth();
-  onAuthStateChanged(auth, user => {
+  onAuthStateChanged(auth, async (user) => {
     if (user) {
       isLoggedIn.value = true;
       pfp = user.photoURL as string;
+      await fetchUserSettings();
     } else {
       isLoggedIn.value = false;
       pfp = undefined;
@@ -48,15 +61,9 @@ const saveSettings = (settings: { goalWeight: number | undefined; unit: 'lb' | '
   console.log(`Goal Weight: ${goalWeight.value}, Unit: ${unit.value}`);
 };
 
-onMounted(async () => {
-  const user = getAuth().currentUser;
-  if (user) {
-    const userRef = doc(db, 'users', user.uid);
-    const userDoc = await getDoc(userRef);
-    const userData = userDoc.data();
-    if (userData && userData.unitOfMeasure) {
-      unit.value = userData.unitOfMeasure;
-    }
+watch(isLoggedIn, async (newValue) => {
+  if (newValue) {
+    await fetchUserSettings();
   }
 });
 </script>

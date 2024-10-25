@@ -25,7 +25,7 @@ const tempGoalWeight = ref<number | null>(goalWeight.value);
 const startingWeight = ref<number | null>(null);
 const tempStartingWeight = ref<number | null>(null);
 
-const currentUnit = ref(props.unit);
+const currentUnit = ref<'lb' | 'kg'>(props.unit);
 
 watch(() => props.unit, (newUnit) => {
   currentUnit.value = newUnit;
@@ -37,9 +37,15 @@ onMounted(async () => {
     const userRef = doc(db, 'users', user.uid);
     const userDoc = await getDoc(userRef);
     const userData = userDoc.data();
-    if (userData && userData.startingWeight) {
-      startingWeight.value = userData.startingWeight.weight;
-      tempStartingWeight.value = startingWeight.value;
+    if (userData) {
+      if (userData.startingWeight) {
+        startingWeight.value = userData.startingWeight.weight;
+        tempStartingWeight.value = startingWeight.value;
+      }
+      if (userData.unitOfMeasure) {
+        currentUnit.value = userData.unitOfMeasure;
+        emit('setUnit', userData.unitOfMeasure); // Emit the updated unit to the parent
+      }
     }
   }
 });
@@ -75,10 +81,10 @@ const updateGoalWeight = async () => {
     try {
       const userRef = doc(db, 'users', user.uid);
       await updateDoc(userRef, {
-        goalWeight: { weight: tempGoalWeight.value, unit: props.unit, createdDate: new Date() }
+        goalWeight: { weight: tempGoalWeight.value, unit: currentUnit.value, createdDate: new Date() }
       });
       goalWeight.value = tempGoalWeight.value;
-      emit('saveSettings', { goalWeight: goalWeight.value, unit: props.unit });
+      emit('saveSettings', { goalWeight: goalWeight.value, unit: currentUnit.value });
       console.log('Goal weight updated in Firebase');
     } catch (error) {
       console.error("Error updating goal weight: ", error);
@@ -92,10 +98,10 @@ const updateStartingWeight = async () => {
     try {
       const userRef = doc(db, 'users', user.uid);
       await updateDoc(userRef, {
-        startingWeight: { weight: tempStartingWeight.value, unit: props.unit, createdDate: new Date() }
+        startingWeight: { weight: tempStartingWeight.value, unit: currentUnit.value, createdDate: new Date() }
       });
       startingWeight.value = tempStartingWeight.value;
-      emit('saveSettings', { startingWeight: startingWeight.value, unit: props.unit });
+      emit('saveSettings', { startingWeight: startingWeight.value, unit: currentUnit.value });
       console.log('Starting weight updated in Firebase');
     } catch (error) {
       console.error("Error updating starting weight: ", error);
@@ -115,7 +121,7 @@ const updateStartingWeight = async () => {
       <NumberInput
         id="goal-weight"
         v-model="tempGoalWeight"
-        placeholder="New goal"
+        :placeholder="`New goal (${currentUnit})`"
         :min="1"
         :max="1000"
         class="border rounded w-full py-2 px-3 mb-4 flex-grow"
@@ -127,7 +133,7 @@ const updateStartingWeight = async () => {
       <NumberInput
         id="starting-weight"
         v-model="tempStartingWeight"
-        placeholder="New start"
+        :placeholder="`New start (${currentUnit})`"
         :min="1"
         :max="1000"
         class="border rounded w-full py-2 px-3 mb-4 flex-grow"

@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import LoadingView from './LoadingView.vue'
   import AddWeight from '../components/AddWeight.vue'
-  import { ref, onMounted, onUnmounted, computed } from 'vue';
+  import { ref, onMounted, onUnmounted, watch } from 'vue';
   import type { Ref } from 'vue'
   import { getAuth } from 'firebase/auth'
   import type { User } from 'firebase/auth'
@@ -37,6 +37,10 @@
     return `${convertedWeight.toFixed(1)} ${preferredUnit.value}`;
   }
 
+  watch([startWeight, currentWeight, preferredUnit], () => {
+    updateWeightChange();
+  });
+
   onMounted(async () => {
     try {
       user.value = getAuth().currentUser
@@ -67,15 +71,12 @@
               }
             })
         }
-
-        updateWeightChange()
       })
 
       // Set up listener for new weight entries
       onSnapshot(query(weightEntriesRef, orderBy('createdDate', 'desc'), limit(1)), (snapshot) => {
         if (!snapshot.empty) {
           currentWeight.value = snapshot.docs[0].data() as WeightEntry
-          updateWeightChange()
         }
       })
 
@@ -108,6 +109,9 @@
         : weightChange.value > 0 
           ? 'text-[#34A853]' 
           : 'text-[#4B4B4B]'
+    } else {
+      displayedChange.value = '--'
+      changeColor.value = 'text-[#4B4B4B]'
     }
   }
 </script>
