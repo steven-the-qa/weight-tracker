@@ -1,100 +1,139 @@
 <script setup lang="ts">
   import { ref, reactive } from 'vue';
   import { getAuth, signOut } from 'firebase/auth'
-  import { doc, serverTimestamp, setDoc, collection, DocumentReference, CollectionReference, addDoc} from "firebase/firestore";
+  import { doc, setDoc, collection, addDoc, serverTimestamp } from "firebase/firestore";
   import { db } from '../firebase'
-  import router from '@/router';
+  import { useRouter } from 'vue-router'
   import NumberInput from "../components/NumberInput.vue";
 
-  const user = getAuth().currentUser
-  const firstName = user?.displayName?.split(' ')[0]
-  const currentWeight = ref(null)
-  const goalWeight = ref(null)
-  const state = reactive({ currentWeight, goalWeight })
+  const router = useRouter()
+
+  interface WeightEntry {
+    unit: 'lb' | 'kg';
+    weight: number;
+    createdDate: Date;
+  }
+
+  const currentWeight = ref<number | null>(null)
+  const goalWeight = ref<number | null>(null)
+  const weightUnit = ref<'lb' | 'kg'>('lb')
+  const state = reactive({ currentWeight, goalWeight, weightUnit })
+
+  const toggleUnit = () => {
+    state.weightUnit = state.weightUnit === 'lb' ? 'kg' : 'lb'
+  }
 
   const handleSubmit = async () => {
     try {
-      if (user == null) return
+      const user = getAuth().currentUser
+      if (!user) throw new Error('No user logged in')
+      if (currentWeight.value === null || goalWeight.value === null) return
 
-      const userRef: DocumentReference = doc(db, 'users', user.uid)
-      await setDoc(userRef, {
-        goalWeight: state.goalWeight,
-        currentWeight: state.currentWeight
-      }, { merge: true })
+      const userRef = doc(db, 'users', user.uid)
+      const weightEntriesRef = collection(userRef, 'weightEntries')
 
-      const weightEntriesRef: CollectionReference = collection(userRef, 'weightEntries')
+      const currentWeightEntry: WeightEntry = {
+        weight: currentWeight.value,
+        unit: state.weightUnit,
+        createdDate: new Date()
+      }
+
+      const goalWeightEntry: WeightEntry = {
+        weight: goalWeight.value,
+        unit: state.weightUnit,
+        createdDate: new Date()
+      }
+
+      // Save current weight to weightEntries collection
       await addDoc(weightEntriesRef, {
-        createdDate: serverTimestamp(),
-        weight: state.currentWeight
+        ...currentWeightEntry,
+        createdDate: serverTimestamp()
       })
 
+      // Save goal weight to user document
+      await setDoc(userRef, {
+        goalWeight: goalWeightEntry
+      }, { merge: true })
+
+      // Change this line to redirect to the dashboard
       router.push('/')
-    }
-    catch (e) {
-      console.error("Error adding document: ", e);
+    } catch (error) {
+      console.error('Error saving user data:', error)
     }
   }
 
-  const handleLogout = () => {
-    const auth = getAuth();
-    signOut(auth).then(() => {
+  const handleLogout = async () => {
+    try {
+      await signOut(getAuth())
       router.push('/login')
-    }).catch((error) => {
-      console.error("Error signing out: ", error);
-    });
+    } catch (error) {
+      console.error('Error logging out:', error)
+    }
   }
 </script>
 
 <template>
-  <main class="h-full bg-white text-black">
-    <div class="flex flex-col w-full min-w-[330px] h-screen">
-    <header class="flex-shrink-0">
-      <h1 data-testid="app-name" class="flex justify-center items-center h-16 bg-[#2E7EFD] text-white text-lg font-bold lg:justify-start lg:pl-10 lg:text-4xl lg:bg-white lg:text-[#2E7EFD] lg:h-20 lg:font-['Kanit'] sm:text-2xl">MyWeightTracker</h1>
-    </header>
-    <div class="flex flex-col items-top flex-grow lg:flex-row lg:items-start overflow-hidden">
-      <div class="hidden lg:block lg:w-1/2 bg-[url('/src/assets/yoga.png')] bg-cover bg-center h-full"></div>
-      <section class="w-full lg:w-1/2 flex flex-col h-full justify-start py-4 relative">
-        <button @click="handleLogout" class="absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors">
-          Logout
-        </button>
-        <div class="flex flex-col justify-start flex-grow">
-          <div>
-            <p data-testid="header-text" v-if="firstName" class="flex justify-center p-5 bg-white text-black font-bold text-2xl w-full lg:text-3xl lg:justify-start">
-              Let's get started, {{ firstName }}
-            </p>
-            <p v-else>Not able to retrieve current user</p>
-            <p class="ml-3 mb-5 text-xl tracking-wide lg:text-2xl lg:ml-5">Tell us a bit about yourself to set your goal and start tracking.</p>
-          </div>
-          <form @submit.prevent="handleSubmit" class="flex flex-col justify-evenly text-[#4B4B4B] text-lg tracking-wide w-full lg:justify-start lg:ml-3">
-            <div id="current-weight-group" class="flex flex-col mb-5 mx-3">
-              <label class="" for="current-weight">What's your current weight?</label>
-              <NumberInput
-                v-model="currentWeight"
-                id="current-weight"
-                name="current-weight"
-                placeholder="enter current weight"
-                :min="0.1"
-                :max="1000"
-                class="lg:w-[50%]"
-              />
-            </div>
-            <div id="goal-weight-group" class="flex flex-col mx-3">
-              <label for="goal-weight">What's your goal weight?</label>
-              <NumberInput
-                v-model="goalWeight"
-                id="goal-weight"
-                name="goal-weight"
-                placeholder="enter goal weight"
-                :min="0.1"
-                :max="1000"
-                class="lg:w-[75%]"
-              />
-            </div>
-            <input class="mt-5 bg-[#2058E8] py-4 px-5 mx-3 rounded-xl text-white font-semibold lg:w-[20%]" type="submit" value="Continue">
-          </form>
+  <main class="h-screen w-full bg-white text-black flex flex-col items-center justify-center relative">
+    <button 
+      @click="handleLogout"
+      class="absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300"
+    >
+      Logout
+    </button>
+    <h1 class="text-2xl font-bold mb-8">Welcome! Let's set up your profile</h1>
+    <form @submit.prevent="handleSubmit" class="w-full max-w-md">
+      <div class="mb-6">
+        <label for="current-weight" class="block mb-2 text-lg font-medium">
+          What's your current weight?
+        </label>
+        <div class="flex items-center">
+          <NumberInput
+            v-model="currentWeight"
+            id="current-weight"
+            name="current-weight"
+            :placeholder="`Enter current weight (${state.weightUnit})`"
+            :min="0.1"
+            :max="1000"
+            class="flex-grow"
+          />
+          <button 
+            type="button" 
+            @click="toggleUnit" 
+            class="ml-2 px-3 py-2 bg-gray-200 rounded"
+          >
+            {{ state.weightUnit }}
+          </button>
         </div>
-      </section>
       </div>
-    </div>
+      <div class="mb-6">
+        <label for="goal-weight" class="block mb-2 text-lg font-medium">
+          What's your goal weight?
+        </label>
+        <div class="flex items-center">
+          <NumberInput
+            v-model="goalWeight"
+            id="goal-weight"
+            name="goal-weight"
+            :placeholder="`Enter goal weight (${state.weightUnit})`"
+            :min="0.1"
+            :max="1000"
+            class="flex-grow"
+          />
+          <button 
+            type="button" 
+            @click="toggleUnit" 
+            class="ml-2 px-3 py-2 bg-gray-200 rounded"
+          >
+            {{ state.weightUnit }}
+          </button>
+        </div>
+      </div>
+      <button 
+        type="submit" 
+        class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
+      >
+        Save and Continue
+      </button>
+    </form>
   </main>
 </template>

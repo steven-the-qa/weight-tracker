@@ -54,7 +54,7 @@ const updateGoalWeight = async () => {
     try {
       const userRef = doc(db, 'users', user.uid);
       await updateDoc(userRef, {
-        goalWeight: goalWeight.value
+        goalWeight: { weight: goalWeight.value, unit: props.unit, createdDate: new Date() }
       });
       console.log('Goal weight updated in Firebase');
     } catch (error) {

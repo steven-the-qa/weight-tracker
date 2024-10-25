@@ -8,14 +8,25 @@
   import { onSnapshot, doc, getDocs, collection, query, orderBy, limit } from "firebase/firestore";
   import type { DocumentReference, CollectionReference, DocumentData, Query } from 'firebase/firestore'
   import { db } from '../firebase'
+
+  interface WeightEntry {
+    unit: 'lb' | 'kg';
+    weight: number;
+    createdDate: Date;
+  }
+
   const user: Ref<User | null> = ref(null)
-  const startWeight: Ref<number | null> = ref(null)
-  const currentWeight: Ref<number | null> = ref(null)
-  const goalWeight: Ref<number | null> = ref(null)
+  const startWeight: Ref<WeightEntry | null> = ref(null)
+  const currentWeight: Ref<WeightEntry | null> = ref(null)
+  const goalWeight: Ref<WeightEntry | null> = ref(null)
   const weightChange: Ref<number | null> = ref(null)
   const displayedChange: Ref<string> = ref('')
   const changeColor: Ref<string> = ref('')
   const isLoading: Ref<boolean> = ref(true)
+
+  const displayWeight = (entry: WeightEntry | null): string => {
+    return entry ? `${entry.weight} ${entry.unit}` : '--'
+  }
 
   onMounted(async () => {
     try {
@@ -23,16 +34,29 @@
       if (!user.value) throw new Error('No user logged in')
 
       const userRef: DocumentReference = doc(db, 'users', user.value.uid)
-
       const weightEntriesRef: CollectionReference = collection(userRef, 'weightEntries')
-      const firstWeightEntryQ: Query = query(weightEntriesRef, orderBy('createdDate'), limit(1))
-      const firstWeightEntry: DocumentData = (await getDocs(firstWeightEntryQ)).docs[0]
-      startWeight.value = firstWeightEntry.get('weight');
 
+      // Fetch start weight (first entry)
+      const firstWeightEntryQ: Query = query(weightEntriesRef, orderBy('createdDate'), limit(1))
+      const firstWeightEntrySnapshot = await getDocs(firstWeightEntryQ)
+      if (!firstWeightEntrySnapshot.empty) {
+        startWeight.value = firstWeightEntrySnapshot.docs[0].data() as WeightEntry
+      }
+
+      // Set up listener for new weight entries
+      onSnapshot(query(weightEntriesRef, orderBy('createdDate', 'desc'), limit(1)), (snapshot) => {
+        if (!snapshot.empty) {
+          currentWeight.value = snapshot.docs[0].data() as WeightEntry
+          updateWeightChange()
+        }
+      })
+
+      // Fetch goal weight
       onSnapshot(userRef, (userSnapshot) => {
         const data = userSnapshot.data() as DocumentData
-        currentWeight.value = data.currentWeight
-        goalWeight.value = data.goalWeight
+        if (data.goalWeight) {
+          goalWeight.value = data.goalWeight as WeightEntry
+        }
         updateWeightChange()
       })
 
@@ -44,13 +68,17 @@
   })
 
   function updateWeightChange() {
-    if (startWeight.value !== null && currentWeight.value !== null) {
-      weightChange.value = startWeight.value - currentWeight.value
+    if (startWeight.value && currentWeight.value) {
+      // Ensure both weights are in the same unit before calculating change
+      const startWeightInLbs = startWeight.value.unit === 'kg' ? startWeight.value.weight * 2.20462 : startWeight.value.weight
+      const currentWeightInLbs = currentWeight.value.unit === 'kg' ? currentWeight.value.weight * 2.20462 : currentWeight.value.weight
+      
+      weightChange.value = startWeightInLbs - currentWeightInLbs
       displayedChange.value = weightChange.value > 0 
-        ? `-${weightChange.value.toFixed(1)} lb` 
+        ? `-${Math.abs(weightChange.value).toFixed(1)} ${currentWeight.value.unit}` 
         : weightChange.value < 0 
-          ? `+${Math.abs(weightChange.value).toFixed(1)} lb` 
-          : `${weightChange.value.toFixed(1)} lb`
+          ? `+${Math.abs(weightChange.value).toFixed(1)} ${currentWeight.value.unit}` 
+          : `${weightChange.value.toFixed(1)} ${currentWeight.value.unit}`
       changeColor.value = weightChange.value < 0 
         ? 'text-[#EA4335]' 
         : weightChange.value > 0 
@@ -70,15 +98,15 @@
                 <section class="flex justify-between items-start row-span-auto">
                     <div data-testid="start-weight" class="flex flex-col items-center">
                         <p>Start</p>
-                        <p class="text-[#4B4B4B]">{{ startWeight }}</p>
+                        <p class="text-[#4B4B4B]">{{ displayWeight(startWeight) }}</p>
                     </div>
                     <div data-testid="current-weight" class="flex flex-col items-center">
                         <p>Current</p>
-                        <p class="text-[#2E7EFD]">{{ currentWeight }}</p>
+                        <p class="text-[#2E7EFD]">{{ displayWeight(currentWeight) }}</p>
                     </div>
                     <div data-testid="goal-weight" class="flex flex-col items-center">
                         <p>Goal</p>
-                        <p class="text-[#4B4B4B]">{{ goalWeight }}</p>
+                        <p class="text-[#4B4B4B]">{{ displayWeight(goalWeight) }}</p>
                     </div>
                 </section>
                 <section class="flex justify-center items-center row-span-2">
