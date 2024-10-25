@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import LoadingView from './LoadingView.vue'
   import AddWeight from '../components/AddWeight.vue'
-  import { ref, onMounted, onUnmounted } from 'vue';
+  import { ref, onMounted, onUnmounted, computed } from 'vue';
   import type { Ref } from 'vue'
   import { getAuth } from 'firebase/auth'
   import type { User } from 'firebase/auth'
@@ -24,9 +24,17 @@
   const changeColor: Ref<string> = ref('')
   const isLoading: Ref<boolean> = ref(true)
   const userListener: Ref<Unsubscribe | null> = ref(null)
+  const preferredUnit: Ref<'lb' | 'kg'> = ref('lb')
+
+  const convertWeight = (weight: number, fromUnit: 'lb' | 'kg', toUnit: 'lb' | 'kg'): number => {
+    if (fromUnit === toUnit) return weight;
+    return fromUnit === 'lb' ? weight / 2.20462 : weight * 2.20462;
+  }
 
   const displayWeight = (entry: WeightEntry | null): string => {
-    return entry ? `${entry.weight} ${entry.unit}` : '--'
+    if (!entry) return '--';
+    const convertedWeight = convertWeight(entry.weight, entry.unit, preferredUnit.value);
+    return `${convertedWeight.toFixed(1)} ${preferredUnit.value}`;
   }
 
   onMounted(async () => {
@@ -40,10 +48,18 @@
       // Set up listener for user document
       userListener.value = onSnapshot(userRef, (userSnapshot) => {
         const userData = userSnapshot.data() as DocumentData
-        if (userData && userData.startingWeight) {
-          startWeight.value = userData.startingWeight as WeightEntry
-        } else {
-          // Fetch start weight (first entry) if startingWeight is not set
+        if (userData) {
+          preferredUnit.value = userData.unitOfMeasure || 'lb'
+          if (userData.startingWeight) {
+            startWeight.value = userData.startingWeight as WeightEntry
+          }
+          if (userData.goalWeight) {
+            goalWeight.value = userData.goalWeight as WeightEntry
+          }
+        }
+
+        // If startingWeight is not set, fetch the first weight entry
+        if (!startWeight.value) {
           getDocs(query(weightEntriesRef, orderBy('createdDate'), limit(1)))
             .then((firstWeightEntrySnapshot) => {
               if (!firstWeightEntrySnapshot.empty) {
@@ -51,6 +67,8 @@
               }
             })
         }
+
+        updateWeightChange()
       })
 
       // Set up listener for new weight entries
@@ -59,15 +77,6 @@
           currentWeight.value = snapshot.docs[0].data() as WeightEntry
           updateWeightChange()
         }
-      })
-
-      // Fetch goal weight
-      onSnapshot(userRef, (userSnapshot) => {
-        const data = userSnapshot.data() as DocumentData
-        if (data.goalWeight) {
-          goalWeight.value = data.goalWeight as WeightEntry
-        }
-        updateWeightChange()
       })
 
       isLoading.value = false
@@ -85,16 +94,15 @@
 
   function updateWeightChange() {
     if (startWeight.value && currentWeight.value) {
-      // Ensure both weights are in the same unit before calculating change
-      const startWeightInLbs = startWeight.value.unit === 'kg' ? startWeight.value.weight * 2.20462 : startWeight.value.weight
-      const currentWeightInLbs = currentWeight.value.unit === 'kg' ? currentWeight.value.weight * 2.20462 : currentWeight.value.weight
+      const startWeightConverted = convertWeight(startWeight.value.weight, startWeight.value.unit, preferredUnit.value)
+      const currentWeightConverted = convertWeight(currentWeight.value.weight, currentWeight.value.unit, preferredUnit.value)
       
-      weightChange.value = startWeightInLbs - currentWeightInLbs
+      weightChange.value = startWeightConverted - currentWeightConverted
       displayedChange.value = weightChange.value > 0 
-        ? `-${Math.abs(weightChange.value).toFixed(1)} ${currentWeight.value.unit}` 
+        ? `-${Math.abs(weightChange.value).toFixed(1)} ${preferredUnit.value}` 
         : weightChange.value < 0 
-          ? `+${Math.abs(weightChange.value).toFixed(1)} ${currentWeight.value.unit}` 
-          : `${weightChange.value.toFixed(1)} ${currentWeight.value.unit}`
+          ? `+${Math.abs(weightChange.value).toFixed(1)} ${preferredUnit.value}` 
+          : `${weightChange.value.toFixed(1)} ${preferredUnit.value}`
       changeColor.value = weightChange.value < 0 
         ? 'text-[#EA4335]' 
         : weightChange.value > 0 
