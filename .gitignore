@@ -1,3 +1,5 @@
+node_modules
+
 # Logs
 logs
 *.log
@@ -7,15 +9,12 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
+# Cache
 .DS_Store
 dist
 dist-ssr
 coverage
 *.local
-
-/cypress/videos/
-/cypress/screenshots/
 
 # Editor directories and files
 .vscode/*
@@ -27,6 +26,7 @@ coverage
 *.sln
 *.sw?
 
+## Playwright
 playwright-artifacts/
 playwright-report/
 /playwright-artifacts/
@@ -35,4 +35,4 @@ playwright-report/
 /playwright/.cache/
 
 ## Firebase
-.firebase/hosting**.cache
+.firebase/*
