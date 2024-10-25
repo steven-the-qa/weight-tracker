@@ -33,3 +33,6 @@ playwright-report/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+## Firebase
+.firebase/

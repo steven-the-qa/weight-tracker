@@ -1,5 +1,39 @@
 <script setup lang="ts">
+  import { getAuth, onAuthStateChanged } from 'firebase/auth';
+  import { doc, setDoc, getDoc } from 'firebase/firestore';
+  import { db } from '../firebase';
+  import { useRouter } from 'vue-router';
   import GoogleLogin from '../components/GoogleLogin.vue';
+
+  const router = useRouter();
+
+  onAuthStateChanged(getAuth(), async (user) => {
+    if (user) {
+      const userRef = doc(db, 'users', user.uid);
+      const userSnap = await getDoc(userRef);
+
+      const userData = {
+        email: user.email,
+        name: user.displayName,
+        pfp: user.photoURL,
+        lastLogin: new Date()
+      };
+
+      if (!userSnap.exists()) {
+        // Create new user document
+        await setDoc(userRef, {
+          ...userData,
+          createdAt: new Date()
+        });
+      } else {
+        // Update existing user document
+        await setDoc(userRef, userData, { merge: true });
+      }
+
+      // Redirect to dashboard or onboarding
+      router.push('/');
+    }
+  });
 </script>
 
 <template>

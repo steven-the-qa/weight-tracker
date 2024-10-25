@@ -50,12 +50,12 @@
         createdDate: serverTimestamp()
       })
 
-      // Save goal weight to user document
+      // Save goal weight and unit of measure to user document
       await setDoc(userRef, {
-        goalWeight: goalWeightEntry
+        goalWeight: goalWeightEntry,
+        unitOfMeasure: state.weightUnit
       }, { merge: true })
 
-      // Change this line to redirect to the dashboard
       router.push('/')
     } catch (error) {
       console.error('Error saving user data:', error)
@@ -86,45 +86,48 @@
         <label for="current-weight" class="block mb-2 text-lg font-medium">
           What's your current weight?
         </label>
-        <div class="flex items-center">
-          <NumberInput
-            v-model="currentWeight"
-            id="current-weight"
-            name="current-weight"
-            :placeholder="`Enter current weight (${state.weightUnit})`"
-            :min="0.1"
-            :max="1000"
-            class="flex-grow"
-          />
-          <button 
-            type="button" 
-            @click="toggleUnit" 
-            class="ml-2 px-3 py-2 bg-gray-200 rounded"
-          >
-            {{ state.weightUnit }}
-          </button>
-        </div>
+        <NumberInput
+          v-model="currentWeight"
+          id="current-weight"
+          name="current-weight"
+          :placeholder="`Enter current weight (${state.weightUnit})`"
+          :min="0.1"
+          :max="1000"
+          class="w-full"
+        />
       </div>
       <div class="mb-6">
         <label for="goal-weight" class="block mb-2 text-lg font-medium">
           What's your goal weight?
         </label>
-        <div class="flex items-center">
-          <NumberInput
-            v-model="goalWeight"
-            id="goal-weight"
-            name="goal-weight"
-            :placeholder="`Enter goal weight (${state.weightUnit})`"
-            :min="0.1"
-            :max="1000"
-            class="flex-grow"
-          />
+        <NumberInput
+          v-model="goalWeight"
+          id="goal-weight"
+          name="goal-weight"
+          :placeholder="`Enter goal weight (${state.weightUnit})`"
+          :min="0.1"
+          :max="1000"
+          class="w-full"
+        />
+      </div>
+      <div class="mb-6">
+        <label class="block mb-2 text-lg font-medium">Preferred unit of measure</label>
+        <div class="flex">
+          <button
+            type="button"
+            @click="toggleUnit"
+            :class="{'bg-blue-500 text-white': state.weightUnit === 'lb', 'bg-gray-200': state.weightUnit === 'kg'}"
+            class="flex-1 py-2 px-4 rounded-l focus:outline-none"
+          >
+            lb
+          </button>
           <button 
             type="button" 
             @click="toggleUnit" 
-            class="ml-2 px-3 py-2 bg-gray-200 rounded"
+            :class="{'bg-blue-500 text-white': state.weightUnit === 'kg', 'bg-gray-200': state.weightUnit === 'lb'}"
+            class="flex-1 py-2 px-4 rounded-r focus:outline-none"
           >
-            {{ state.weightUnit }}
+            kg
           </button>
         </div>
       </div>
