@@ -5,7 +5,7 @@
   import type { Ref } from 'vue'
   import { getAuth } from 'firebase/auth'
   import type { User } from 'firebase/auth'
-  import { onSnapshot, doc, getDoc, getDocs, collection, query, orderBy, limit } from "firebase/firestore";
+  import { onSnapshot, doc, getDocs, collection, query, orderBy, limit } from "firebase/firestore";
   import type { DocumentReference, CollectionReference, DocumentData, Query } from 'firebase/firestore'
   import { db } from '../firebase'
   const user: Ref<User | null> = ref(null)
