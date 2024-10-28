@@ -118,10 +118,8 @@ const createChart = async (entries: WeightEntry[]) => {
       }
     }
 
-    chartInstance.value = new Chart(
-      chartCanvas.value as HTMLCanvasElement,
-      config as ChartConfiguration<'line', number[], string>
-    )
+    // Cast the chart instance to any temporarily to bypass the complex type inference
+    chartInstance.value = new Chart(chartCanvas.value!, config) as any
   } catch (error) {
     console.error('Error creating chart:', error)
   }
