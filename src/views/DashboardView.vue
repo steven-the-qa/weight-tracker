@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import LoadingView from './LoadingView.vue'
   import AddWeight from '../components/AddWeight.vue'
+  import ProgressGraph from '../components/ProgressGraph.vue'
   import { ref, onMounted, onUnmounted, watch } from 'vue';
   import type { Ref } from 'vue'
   import { getAuth } from 'firebase/auth'
@@ -122,8 +123,8 @@
       <div class="flex flex-col items-center h-full">
         <h1 class="hidden lg:block text-2xl font-bold text-left w-[50%] ml-10 mt-5">Good morning, Steven!</h1>
         <div class="w-full h-full lg:flex lg:flex-col lg:justify-center lg:items-center">
-            <div class="h-full grid grid-cols-auto grid-rows-6 p-5 text-xl font-bold text-black lg:w-[50%]">
-                <section class="flex justify-between items-start row-span-auto">
+            <div class="h-full grid grid-cols-1 grid-rows-[auto_1fr_auto] gap-4 p-5 text-xl font-bold text-black lg:w-[50%]">
+                <section class="flex justify-between items-start">
                     <div data-testid="start-weight" class="flex flex-col items-center">
                         <p>Start</p>
                         <p class="text-[#4B4B4B]">{{ displayWeight(startWeight) }}</p>
@@ -137,20 +138,18 @@
                         <p class="text-[#4B4B4B]">{{ displayWeight(goalWeight) }}</p>
                     </div>
                 </section>
-                <section class="flex justify-center items-center row-span-2">
-                    <!-- <div class="flex justify-center items-center h-44 w-72 bg-[#D9D9D9]">
-                        TBD - Graph
-                    </div> -->
+                <section class="flex justify-center items-center min-h-[400px]">
+                  <ProgressGraph :unit="preferredUnit" />
                 </section>
-                <section class="flex justify-between items-end row-span-2">
+                <section class="flex justify-between items-end">
                     <div data-testid="weight-change" class="flex flex-col justify-center items-center">
                         <p>Change</p>
                         <p :class="changeColor">{{ displayedChange }}</p>
                     </div>
                     <AddWeight />
                 </section>
-              </div>
-          </div>
+            </div>
+        </div>
       </div>
       <template #fallback><LoadingView /></template>
     </Suspense>
