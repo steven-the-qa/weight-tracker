@@ -1,107 +1,144 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
-import NumberInput from './NumberInput.vue'; // Import the NumberInput component
-import { doc, updateDoc, getDoc } from 'firebase/firestore';
-import { db } from '../firebase';
-import { getAuth } from 'firebase/auth';
+  import { onMounted, ref, watch } from 'vue';
+  import NumberInput from './NumberInput.vue'; // Import the NumberInput component
+  import { doc, updateDoc, getDoc, collection, getDocs, deleteDoc } from 'firebase/firestore';
+  import { db } from '../firebase';
+  import { getAuth } from 'firebase/auth';
 
-const props = defineProps({
-  isMenuOpen: Boolean,
-  goalWeight: Number,
-  unit: {
-    type: String as () => 'lb' | 'kg',
-    required: true
-  },
-});
+  const props = defineProps({
+    isMenuOpen: Boolean,
+    goalWeight: Number,
+    unit: {
+      type: String as () => 'lb' | 'kg',
+      required: true
+    },
+  });
 
-const emit = defineEmits(['toggleMenu', 'setUnit', 'saveSettings', 'handleSignout']);
+  const emit = defineEmits(['toggleMenu', 'setUnit', 'saveSettings', 'handleSignout']);
 
-const toggleMenu = () => {
-  emit('toggleMenu'); // Emit the toggleMenu event
-};
+  const toggleMenu = () => {
+    emit('toggleMenu'); // Emit the toggleMenu event
+  };
 
-const goalWeight = ref<number | null>(props.goalWeight ?? null); // Initialize goalWeight to null if undefined
-const tempGoalWeight = ref<number | null>(goalWeight.value);
-const startingWeight = ref<number | null>(null);
-const tempStartingWeight = ref<number | null>(null);
+  const goalWeight = ref<number | null>(props.goalWeight ?? null); // Initialize goalWeight to null if undefined
+  const tempGoalWeight = ref<number | null>(goalWeight.value);
+  const startingWeight = ref<number | null>(null);
+  const tempStartingWeight = ref<number | null>(null);
 
-const currentUnit = ref<'lb' | 'kg'>(props.unit);
+  const currentUnit = ref<'lb' | 'kg'>(props.unit);
 
-watch(() => props.unit, (newUnit) => {
-  currentUnit.value = newUnit;
-});
+  watch(() => props.unit, (newUnit) => {
+    currentUnit.value = newUnit;
+  });
 
-onMounted(async () => {
-  const user = getAuth().currentUser;
-  if (user) {
-    const userRef = doc(db, 'users', user.uid);
-    const userDoc = await getDoc(userRef);
-    const userData = userDoc.data();
-    if (userData) {
-      if (userData.startingWeight) {
-        startingWeight.value = userData.startingWeight.weight;
-        tempStartingWeight.value = startingWeight.value;
-      }
-      if (userData.unitOfMeasure) {
-        currentUnit.value = userData.unitOfMeasure;
-        emit('setUnit', userData.unitOfMeasure); // Emit the updated unit to the parent
-      }
-    }
-  }
-});
-
-const handleSignout = () => {
-  emit('handleSignout'); // Emit the handleSignout event
-};
-
-const setUnit = async (newUnit: 'lb' | 'kg') => {
-  currentUnit.value = newUnit;
-  emit('setUnit', newUnit);
-
-  // Get the current user
-  const user = getAuth().currentUser;
-  if (user) {
-    try {
-      // Reference to the user's document in Firestore
+  onMounted(async () => {
+    const user = getAuth().currentUser;
+    if (user) {
       const userRef = doc(db, 'users', user.uid);
-
-      // Update the unit of measure in the user's document
-      await updateDoc(userRef, {
-        unitOfMeasure: newUnit
-      });
-    } catch (error) {
-      console.error("Error updating unit of measure: ", error);
-    }
-  }
-};
-
-const updateWeight = async (type: 'goal' | 'starting', value: number | null) => {
-  const user = getAuth().currentUser;
-  if (user && value !== null) {
-    try {
-      const userRef = doc(db, 'users', user.uid);
-      const fieldName = type === 'goal' ? 'goalWeight' : 'startingWeight';
-      
-      await updateDoc(userRef, {
-        [fieldName]: { weight: value, unit: currentUnit.value, createdDate: new Date() }
-      });
-      
-      if (type === 'goal') {
-        goalWeight.value = value;
-      } else {
-        startingWeight.value = value;
+      const userDoc = await getDoc(userRef);
+      const userData = userDoc.data();
+      if (userData) {
+        if (userData.startingWeight) {
+          startingWeight.value = userData.startingWeight.weight;
+          tempStartingWeight.value = startingWeight.value;
+        }
+        if (userData.unitOfMeasure) {
+          currentUnit.value = userData.unitOfMeasure;
+          emit('setUnit', userData.unitOfMeasure); // Emit the updated unit to the parent
+        }
       }
-      
-      emit('saveSettings', { [fieldName]: value, unit: currentUnit.value });
-      console.log(`${type} weight updated in Firebase`);
-    } catch (error) {
-      console.error(`Error updating ${type} weight: `, error);
     }
-  }
-};
+  });
 
-const updateGoalWeight = () => updateWeight('goal', tempGoalWeight.value);
-const updateStartingWeight = () => updateWeight('starting', tempStartingWeight.value);
+  const handleSignout = () => {
+    emit('handleSignout'); // Emit the handleSignout event
+  };
+
+  const setUnit = async (newUnit: 'lb' | 'kg') => {
+    currentUnit.value = newUnit;
+    emit('setUnit', newUnit);
+
+    // Get the current user
+    const user = getAuth().currentUser;
+    if (user) {
+      try {
+        // Reference to the user's document in Firestore
+        const userRef = doc(db, 'users', user.uid);
+
+        // Update the unit of measure in the user's document
+        await updateDoc(userRef, {
+          unitOfMeasure: newUnit
+        });
+      } catch (error) {
+        console.error("Error updating unit of measure: ", error);
+      }
+    }
+  };
+
+  const updateWeight = async (type: 'goal' | 'starting', value: number | null) => {
+    const user = getAuth().currentUser;
+    if (user && value !== null) {
+      try {
+        const userRef = doc(db, 'users', user.uid);
+        const fieldName = type === 'goal' ? 'goalWeight' : 'startingWeight';
+
+        await updateDoc(userRef, {
+          [fieldName]: { weight: value, unit: currentUnit.value, createdDate: new Date() }
+        });
+
+        if (type === 'goal') {
+          goalWeight.value = value;
+        } else {
+          startingWeight.value = value;
+        }
+
+        emit('saveSettings', { [fieldName]: value, unit: currentUnit.value });
+        console.log(`${type} weight updated in Firebase`);
+      } catch (error) {
+        console.error(`Error updating ${type} weight: `, error);
+      }
+    }
+  };
+
+  const updateGoalWeight = () => updateWeight('goal', tempGoalWeight.value);
+  const updateStartingWeight = () => updateWeight('starting', tempStartingWeight.value);
+
+  const isDeleting = ref(false)
+
+  const handleDeleteAllEntries = async () => {
+    if (!confirm('Are you sure you want to delete all your weight entries? This action cannot be undone.')) {
+      return;
+    }
+
+    const user = getAuth().currentUser;
+    if (!user) return;
+
+    try {
+      isDeleting.value = true;
+      const userRef = doc(db, 'users', user.uid);
+      const weightEntriesRef = collection(userRef, 'weightEntries');
+
+      // Get all weight entries
+      const snapshot = await getDocs(weightEntriesRef);
+
+      // Delete each entry
+      for (const doc of snapshot.docs) {
+        await deleteDoc(doc.ref);
+      }
+
+      // Reset the starting weight and current weight in the user document
+      await updateDoc(userRef, {
+        startingWeight: null
+      });
+
+      isDeleting.value = false;
+      alert('All weight entries have been deleted successfully.');
+    } catch (error) {
+      console.error('Error deleting weight entries:', error);
+      alert('Failed to delete weight entries. Please try again.');
+      isDeleting.value = false;
+    }
+  };
 </script>
 
 <template>
@@ -135,7 +172,7 @@ const updateStartingWeight = () => updateWeight('starting', tempStartingWeight.v
       <button @click="updateStartingWeight" class="bg-blue-500 text-white px-5 rounded py-3 ml-2 mb-4 text-lg font-bold">Update</button>
     </div>
     <div class="flex mt-4">
-      <button 
+      <button
         @click="setUnit('lb')" 
         :class="{
           'bg-blue-500 text-white': currentUnit === 'lb', 
@@ -145,7 +182,7 @@ const updateStartingWeight = () => updateWeight('starting', tempStartingWeight.v
       >
         lb
       </button>
-      <button 
+      <button
         @click="setUnit('kg')" 
         :class="{
           'bg-blue-500 text-white': currentUnit === 'kg', 
@@ -155,6 +192,19 @@ const updateStartingWeight = () => updateWeight('starting', tempStartingWeight.v
       >
         kg
       </button>
+    </div>
+    <div class="border-t mt-4 pt-4">
+      <h3 class="text-lg font-medium text-red-600 mb-2">Danger Zone</h3>
+      <button
+        @click="handleDeleteAllEntries"
+        :disabled="isDeleting"
+        class="w-full bg-red-100 text-red-600 hover:bg-red-200 px-4 py-2 rounded transition-colors duration-200"
+      >
+        {{ isDeleting ? 'Deleting...' : 'Delete All Weight Entries' }}
+      </button>
+      <p class="text-xs text-gray-500 mt-1">
+        This will permanently delete all your weight entries. This action cannot be undone.
+      </p>
     </div>
     <button @click="handleSignout" class="text-red-500 mt-4">Log out</button>
   </div>

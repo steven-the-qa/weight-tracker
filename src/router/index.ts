@@ -108,16 +108,29 @@ const getCurrentUser = () => {
   })
 }
 
+// Add this to track the previous route
+let previousRoute = ''
+
 router.beforeEach(async (to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    const user = await getCurrentUser()
-    if (!user) {
-      next('/login')
+  const auth = getAuth()
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+
+  // Store the previous route
+  previousRoute = from.path
+
+  if (requiresAuth && !auth.currentUser) {
+    next('/login')
+  } else {
+    // Check if we're navigating to dashboard from onboarding
+    if (to.path === '/' && previousRoute === '/onboarding') {
+      next()
+      // Use setTimeout to ensure navigation completes before reload
+      setTimeout(() => {
+        window.location.reload()
+      }, 100)
     } else {
       next()
     }
-  } else {
-    next()
   }
 })
 

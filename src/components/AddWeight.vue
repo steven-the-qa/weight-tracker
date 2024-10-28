@@ -53,6 +53,9 @@
             })
 
             closeDialog()
+            
+            // Reload the page after successful weight addition
+            window.location.reload()
         }
         catch (e) {
             console.error("Error adding document: ", e);
