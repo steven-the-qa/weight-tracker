@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref, reactive } from 'vue';
+  import { ref } from 'vue';
   import { getAuth, signOut } from 'firebase/auth'
   import { doc, setDoc, collection, addDoc, serverTimestamp } from "firebase/firestore";
   import { db } from '../firebase'
@@ -17,10 +17,9 @@
   const currentWeight = ref<number | null>(null)
   const goalWeight = ref<number | null>(null)
   const weightUnit = ref<'lb' | 'kg'>('lb')
-  const state = reactive({ currentWeight, goalWeight, weightUnit })
 
   const toggleUnit = () => {
-    state.weightUnit = state.weightUnit === 'lb' ? 'kg' : 'lb'
+    weightUnit.value = weightUnit.value === 'lb' ? 'kg' : 'lb'
   }
 
   const handleSubmit = async () => {
@@ -32,28 +31,22 @@
       const userRef = doc(db, 'users', user.uid)
       const weightEntriesRef = collection(userRef, 'weightEntries')
 
-      const currentWeightEntry: WeightEntry = {
-        weight: currentWeight.value,
-        unit: state.weightUnit,
+      const createWeightEntry = (weight: number): WeightEntry => ({
+        weight,
+        unit: weightUnit.value,
         createdDate: new Date()
-      }
-
-      const goalWeightEntry: WeightEntry = {
-        weight: goalWeight.value,
-        unit: state.weightUnit,
-        createdDate: new Date()
-      }
+      })
 
       // Save current weight to weightEntries collection
       await addDoc(weightEntriesRef, {
-        ...currentWeightEntry,
+        ...createWeightEntry(currentWeight.value),
         createdDate: serverTimestamp()
       })
 
       // Save goal weight and unit of measure to user document
       await setDoc(userRef, {
-        goalWeight: goalWeightEntry,
-        unitOfMeasure: state.weightUnit
+        goalWeight: createWeightEntry(goalWeight.value),
+        unitOfMeasure: weightUnit.value
       }, { merge: true })
 
       router.push('/')
@@ -90,7 +83,7 @@
           v-model="currentWeight"
           id="current-weight"
           name="current-weight"
-          :placeholder="`Enter current weight (${state.weightUnit})`"
+          :placeholder="`Enter current weight (${weightUnit})`"
           :min="0.1"
           :max="1000"
           class="w-full"
@@ -104,7 +97,7 @@
           v-model="goalWeight"
           id="goal-weight"
           name="goal-weight"
-          :placeholder="`Enter goal weight (${state.weightUnit})`"
+          :placeholder="`Enter goal weight (${weightUnit})`"
           :min="0.1"
           :max="1000"
           class="w-full"
@@ -116,7 +109,7 @@
           <button
             type="button"
             @click="toggleUnit"
-            :class="{'bg-blue-500 text-white': state.weightUnit === 'lb', 'bg-gray-200': state.weightUnit === 'kg'}"
+            :class="{'bg-blue-500 text-white': weightUnit === 'lb', 'bg-gray-200': weightUnit === 'kg'}"
             class="flex-1 py-2 px-4 rounded-l focus:outline-none"
           >
             lb
@@ -124,7 +117,7 @@
           <button 
             type="button" 
             @click="toggleUnit" 
-            :class="{'bg-blue-500 text-white': state.weightUnit === 'kg', 'bg-gray-200': state.weightUnit === 'lb'}"
+            :class="{'bg-blue-500 text-white': weightUnit === 'kg', 'bg-gray-200': weightUnit === 'lb'}"
             class="flex-1 py-2 px-4 rounded-r focus:outline-none"
           >
             kg

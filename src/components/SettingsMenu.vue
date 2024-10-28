@@ -75,43 +75,37 @@ const setUnit = async (newUnit: 'lb' | 'kg') => {
   }
 };
 
-const updateGoalWeight = async () => {
+const updateWeight = async (type: 'goal' | 'starting', value: number | null) => {
   const user = getAuth().currentUser;
-  if (user && tempGoalWeight.value !== null) {
+  if (user && value !== null) {
     try {
       const userRef = doc(db, 'users', user.uid);
+      const fieldName = type === 'goal' ? 'goalWeight' : 'startingWeight';
+      
       await updateDoc(userRef, {
-        goalWeight: { weight: tempGoalWeight.value, unit: currentUnit.value, createdDate: new Date() }
+        [fieldName]: { weight: value, unit: currentUnit.value, createdDate: new Date() }
       });
-      goalWeight.value = tempGoalWeight.value;
-      emit('saveSettings', { goalWeight: goalWeight.value, unit: currentUnit.value });
-      console.log('Goal weight updated in Firebase');
+      
+      if (type === 'goal') {
+        goalWeight.value = value;
+      } else {
+        startingWeight.value = value;
+      }
+      
+      emit('saveSettings', { [fieldName]: value, unit: currentUnit.value });
+      console.log(`${type} weight updated in Firebase`);
     } catch (error) {
-      console.error("Error updating goal weight: ", error);
+      console.error(`Error updating ${type} weight: `, error);
     }
   }
 };
 
-const updateStartingWeight = async () => {
-  const user = getAuth().currentUser;
-  if (user && tempStartingWeight.value !== null) {
-    try {
-      const userRef = doc(db, 'users', user.uid);
-      await updateDoc(userRef, {
-        startingWeight: { weight: tempStartingWeight.value, unit: currentUnit.value, createdDate: new Date() }
-      });
-      startingWeight.value = tempStartingWeight.value;
-      emit('saveSettings', { startingWeight: startingWeight.value, unit: currentUnit.value });
-      console.log('Starting weight updated in Firebase');
-    } catch (error) {
-      console.error("Error updating starting weight: ", error);
-    }
-  }
-};
+const updateGoalWeight = () => updateWeight('goal', tempGoalWeight.value);
+const updateStartingWeight = () => updateWeight('starting', tempStartingWeight.value);
 </script>
 
 <template>
-  <div v-if="isMenuOpen" class="absolute top-14 right-0 bg-white shadow-lg p-4 w-64">
+  <div v-if="isMenuOpen" class="absolute top-14 right-0 bg-white shadow-lg p-4 w-72">
     <header class="flex justify-between items-center">
       <h1 class="text-xl">Settings</h1>
       <button @click="toggleMenu" class="text-black">✕</button>
@@ -126,7 +120,7 @@ const updateStartingWeight = async () => {
         :max="1000"
         class="border rounded w-full py-2 px-3 mb-4 flex-grow"
       />
-      <button @click="updateGoalWeight" class="bg-blue-500 text-white py-2 px-4 rounded ml-2">Update</button>
+      <button @click="updateGoalWeight" class="bg-blue-500 text-white px-5 rounded py-3 ml-2 mb-4 text-lg font-bold">Update</button>
     </div>
     <label for="starting-weight" class="block text-gray-700 mt-4">Starting Weight</label>
     <div class="flex items-center">
@@ -138,7 +132,7 @@ const updateStartingWeight = async () => {
         :max="1000"
         class="border rounded w-full py-2 px-3 mb-4 flex-grow"
       />
-      <button @click="updateStartingWeight" class="bg-blue-500 text-white py-2 px-4 rounded ml-2">Update</button>
+      <button @click="updateStartingWeight" class="bg-blue-500 text-white px-5 rounded py-3 ml-2 mb-4 text-lg font-bold">Update</button>
     </div>
     <div class="flex mt-4">
       <button 
@@ -162,6 +156,6 @@ const updateStartingWeight = async () => {
         kg
       </button>
     </div>
-    <button @click="handleSignout" class="text-blue-500 mt-4">Log out</button>
+    <button @click="handleSignout" class="text-red-500 mt-4">Log out</button>
   </div>
 </template>
