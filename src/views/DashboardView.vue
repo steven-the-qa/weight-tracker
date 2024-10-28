@@ -119,12 +119,12 @@
 </script>
 
 <template>
-  <main class="h-[90%] w-full bg-white text-black">
+  <main class="h-screen w-full bg-white text-black overflow-hidden">
     <Suspense>
       <div class="flex flex-col items-center h-full">
         <h1 class="hidden lg:block text-2xl font-bold text-left w-[50%] ml-10 mt-5">Hello, Steven!</h1>
         <div class="w-full h-full lg:flex lg:flex-col lg:justify-center lg:items-center">
-            <div class="h-full grid grid-cols-1 grid-rows-[auto_auto_1fr_auto] gap-4 p-5 text-xl font-bold text-black lg:w-[50%]">
+            <div class="grid grid-cols-1 grid-rows-[auto_auto_45vh_auto] gap-4 p-5 text-xl font-bold text-black lg:w-[50%]">
                 <section class="flex justify-between items-start">
                     <div data-testid="start-weight" class="flex flex-col items-center">
                         <p>Start</p>
@@ -147,7 +147,7 @@
                       :preferred-unit="preferredUnit"
                     />
                 </section>
-                <section class="flex justify-center items-center min-h-[400px]">
+                <section class="flex justify-center items-center max-h-[45vh]">
                   <ProgressGraph :unit="preferredUnit" />
                 </section>
                 <section class="flex justify-between items-end">
