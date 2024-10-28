@@ -62,38 +62,59 @@
         }
     }
 
-    const toggleUnit = () => {
-        state.weightUnit = state.weightUnit === 'lb' ? 'kg' : 'lb'
+    const toggleUnit = async () => {
+        state.weightUnit = state.weightUnit === 'lb' ? 'kg' : 'lb';
     }
 </script>
 
 <template>
-    <div id='dialog-container' class="hidden absolute top-0 left-0 h-full w-full z-[100] bg-gray-500 opacity-75 flex justify-center items-center min-w-[300px]">
-        <div data-testid='dialog-content' class="relative flex flex-col justify-center items-center h-64 w-80 bg-white my-[50%] pl-5 rounded-xl">
-            <p data-testid='close-dialog' @click="closeDialog" class="inline-flex absolute top-[1rem] right-[1rem] text-2xl cursor-pointer">✕</p>
+    <div id='dialog-container' class="hidden absolute top-0 left-0 h-full w-full z-[100] bg-black/50 flex justify-center items-center min-w-[300px]">
+        <div data-testid='dialog-content' class="relative flex flex-col justify-center items-center h-64 w-72 bg-white/90 backdrop-blur-sm my-[50%] px-4 rounded-xl">
+            <p data-testid='close-dialog' @click="closeDialog" class="inline-flex absolute top-3 right-3 text-2xl cursor-pointer">✕</p>
             <form @submit.prevent="handleSubmit" class="flex flex-col justify-center items-start text-[#4B4B4B] text-lg w-full tracking-wide">
-                <div id="current-weight-group" class="flex flex-col mb-5 w-full">
-                    <label class="mb-3 mt-6 text-xl font-normal" for="current-weight">Add your current weight</label>
-                    <div class="flex items-center">
+                <div id="current-weight-group" class="flex flex-col w-full">
+                    <label class="mb-3 mt-3 text-xl font-normal" for="current-weight">Add your current weight</label>
+                    <div class="flex w-full items-start h-10">
                         <NumberInput
                             v-model="currentWeight"
                             id="current-weight"
                             name="current-weight"
-                            :placeholder="`enter current weight (${state.weightUnit})`"
+                            :placeholder="`enter weight (${state.weightUnit})`"
                             :min="0.1"
                             :max="1000"
-                            class="flex-grow"
+                            class="w-[75%] h-full"
                         />
-                        <button 
-                            type="button" 
-                            @click="toggleUnit" 
-                            class="ml-2 px-2 py-1 bg-gray-200 rounded"
-                        >
-                            {{ state.weightUnit }}
-                        </button>
+                        <div class="flex w-[25%] h-full">
+                            <button
+                                type="button"
+                                @click="toggleUnit"
+                                :class="{
+                                    'bg-blue-500 text-white': state.weightUnit === 'lb',
+                                    'bg-gray-200 text-gray-700': state.weightUnit !== 'lb',
+                                }"
+                                class="flex-1 rounded-l transition-opacity duration-200"
+                            >
+                                lb
+                            </button>
+                            <button
+                                type="button"
+                                @click="toggleUnit"
+                                :class="{
+                                    'bg-blue-500 text-white': state.weightUnit === 'kg',
+                                    'bg-gray-200 text-gray-700': state.weightUnit !== 'kg',
+                                }"
+                                class="flex-1 rounded-r transition-opacity duration-200"
+                            >
+                                kg
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <input class="mt-auto mb-5 bg-[#2058E8] py-4 w-[87%] rounded-xl text-white font-semibold cursor-pointer" type="submit" value="Add weight">
+                <input
+                    type="submit"
+                    value="Submit"
+                    class="mt-4 mb-3 bg-[#2058E8] h-10 w-full rounded-lg text-white font-semibold cursor-pointer"
+                />
             </form>
         </div>
     </div>
