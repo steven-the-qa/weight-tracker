@@ -122,7 +122,7 @@
   <main class="h-[90%] w-full bg-white text-black">
     <Suspense>
       <div class="flex flex-col items-center h-full">
-        <h1 class="hidden lg:block text-2xl font-bold text-left w-[50%] ml-10 mt-5">Good morning, Steven!</h1>
+        <h1 class="hidden lg:block text-2xl font-bold text-left w-[50%] ml-10 mt-5">Hello, Steven!</h1>
         <div class="w-full h-full lg:flex lg:flex-col lg:justify-center lg:items-center">
             <div class="h-full grid grid-cols-1 grid-rows-[auto_1fr_auto] gap-4 p-5 text-xl font-bold text-black lg:w-[50%]">
                 <section class="flex justify-between items-start">
