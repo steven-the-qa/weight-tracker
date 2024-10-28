@@ -124,7 +124,7 @@
       <div class="flex flex-col items-center h-full">
         <h1 class="hidden lg:block text-2xl font-bold text-left w-[50%] ml-10 mt-5">Hello, Steven!</h1>
         <div class="w-full h-full lg:flex lg:flex-col lg:justify-center lg:items-center">
-            <div class="h-full grid grid-cols-1 grid-rows-[auto_1fr_auto] gap-4 p-5 text-xl font-bold text-black lg:w-[50%]">
+            <div class="h-full grid grid-cols-1 grid-rows-[auto_auto_1fr_auto] gap-4 p-5 text-xl font-bold text-black lg:w-[50%]">
                 <section class="flex justify-between items-start">
                     <div data-testid="start-weight" class="flex flex-col items-center">
                         <p>Start</p>
@@ -139,6 +139,14 @@
                         <p class="text-[#4B4B4B]">{{ displayWeight(goalWeight) }}</p>
                     </div>
                 </section>
+                <section class="flex justify-center items-center">
+                    <ProgressBar
+                      :start-weight="startWeight"
+                      :current-weight="currentWeight"
+                      :goal-weight="goalWeight"
+                      :preferred-unit="preferredUnit"
+                    />
+                </section>
                 <section class="flex justify-center items-center min-h-[400px]">
                   <ProgressGraph :unit="preferredUnit" />
                 </section>
@@ -147,12 +155,6 @@
                         <p>Change</p>
                         <p :class="changeColor">{{ displayedChange }}</p>
                     </div>
-                    <ProgressBar
-                      :start-weight="startWeight"
-                      :current-weight="currentWeight"
-                      :goal-weight="goalWeight"
-                      :preferred-unit="preferredUnit"
-                    />
                     <AddWeight />
                 </section>
             </div>
