@@ -37,7 +37,7 @@
 </script>
 
 <template>
-  <main class="h-screen w-full bg-white text-black overflow-hidden">
+  <main class="w-full bg-white text-black overflow-hidden">
     <div class="flex flex-col w-full h-full">
       <header class="flex-shrink-0">
         <h1 data-testid="app-name" class="flex justify-center items-center h-12 bg-[#2E7EFD] text-white text-lg font-bold lg:justify-start lg:pl-10 lg:text-3xl lg:bg-white lg:text-[#2E7EFD] lg:h-16 lg:font-['Kanit'] sm:text-xl">

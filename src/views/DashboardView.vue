@@ -119,7 +119,7 @@
 </script>
 
 <template>
-  <main class="h-screen w-full bg-white text-black overflow-hidden">
+  <main class="w-full bg-white text-black overflow-hidden">
     <Suspense>
       <div class="flex flex-col items-center h-full">
         <h1 class="hidden lg:block text-2xl font-bold text-left w-[50%] ml-10 mt-5">Hello, Steven!</h1>

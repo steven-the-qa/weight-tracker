@@ -69,25 +69,22 @@ watch(isLoggedIn, async (newValue) => {
 </script>
 
 <template>
-  <div class="max-h-screen overflow-hidden">
-    <header v-if="$route.name == 'dashboard'" class="flex justify-between bg-[#2E7EFD] h-14 font-['Kanit'] min-w-[300px]">
-    <h1 data-testid="app-name" class="flex items-center ml-3 text-white text-xl w-[75%] font-bold lg:font-semibold lg:text-2xl">MyWeightTracker</h1>
-    <div class="flex justify-end items-center w-[25%] mr-3">
-      <img class="rounded-full w-10 h-10 cursor-pointer" v-if="pfp" :src="pfp" alt="Profile pic from user's Google account" referrerpolicy="no-referrer" @click="toggleMenu" />
-      </div>
-    </header>
+  <header v-if="$route.name == 'dashboard'" class="flex justify-between bg-[#2E7EFD] h-14 font-['Kanit'] min-w-[300px]">
+  <h1 data-testid="app-name" class="flex items-center ml-3 text-white text-xl w-[75%] font-bold lg:font-semibold lg:text-2xl">MyWeightTracker</h1>
+  <div class="flex justify-end items-center w-[25%] mr-3">
+    <img class="rounded-full w-10 h-10 cursor-pointer" v-if="pfp" :src="pfp" alt="Profile pic from user's Google account" referrerpolicy="no-referrer" @click="toggleMenu" />
+    </div>
+  </header>
 
-    <SettingsMenu 
-      :isMenuOpen="isMenuOpen"
-      :goalWeight="goalWeight"
-      :unit="unit"
-      @toggleMenu="toggleMenu"
-      @setUnit="setUnit"
-      @saveSettings="saveSettings"
-      @handleSignout="handleSignout"
-    />
+  <SettingsMenu
+    :isMenuOpen="isMenuOpen"
+    :goalWeight="goalWeight"
+    :unit="unit"
+    @toggleMenu="toggleMenu"
+    @setUnit="setUnit"
+    @saveSettings="saveSettings"
+    @handleSignout="handleSignout"
+  />
 
-    <RouterView class="min-w-[300px] overflow-hidden"/>
-  </div>
-
+  <RouterView class="min-w-[300px] h-dvh overflow-hidden"/>
 </template>
