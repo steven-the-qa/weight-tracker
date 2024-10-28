@@ -2,6 +2,7 @@
   import LoadingView from './LoadingView.vue'
   import AddWeight from '../components/AddWeight.vue'
   import ProgressGraph from '../components/ProgressGraph.vue'
+  import ProgressBar from '../components/ProgressBar.vue'
   import { ref, onMounted, onUnmounted, watch } from 'vue';
   import type { Ref } from 'vue'
   import { getAuth } from 'firebase/auth'
@@ -146,6 +147,12 @@
                         <p>Change</p>
                         <p :class="changeColor">{{ displayedChange }}</p>
                     </div>
+                    <ProgressBar
+                      :start-weight="startWeight"
+                      :current-weight="currentWeight"
+                      :goal-weight="goalWeight"
+                      :preferred-unit="preferredUnit"
+                    />
                     <AddWeight />
                 </section>
             </div>
