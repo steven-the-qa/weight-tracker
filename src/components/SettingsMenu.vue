@@ -133,6 +133,10 @@
 
       isDeleting.value = false;
       alert('All weight entries have been deleted successfully.');
+
+      // Reload the page after successful deletion
+      window.location.reload();
+
     } catch (error) {
       console.error('Error deleting weight entries:', error);
       alert('Failed to delete weight entries. Please try again.');
