@@ -20,7 +20,7 @@ const props = defineProps<{
 }>()
 
 const chartCanvas = ref<HTMLCanvasElement | null>(null)
-const chartInstance = ref<Chart<'line', number[], string> | null>(null)
+const chartInstance = ref<Chart<'line', (number | null)[], unknown> | null>(null)
 let updateTimeout: number | null = null
 
 const emit = defineEmits<{
@@ -74,7 +74,7 @@ const createChart = async (entries: WeightEntry[]) => {
     )
     const data = sortedEntries.map(entry => entry.weight)
 
-    const config: ChartConfiguration<'line', number[], string> = {
+    const config: ChartConfiguration<'line', (number | null)[], unknown> = {
       type: 'line',
       data: {
         labels,
