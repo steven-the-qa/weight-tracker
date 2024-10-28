@@ -118,7 +118,10 @@ const createChart = async (entries: WeightEntry[]) => {
       }
     }
 
-    chartInstance.value = new Chart(chartCanvas.value, config)
+    chartInstance.value = new Chart(
+      chartCanvas.value as HTMLCanvasElement,
+      config as ChartConfiguration<'line', number[], string>
+    )
   } catch (error) {
     console.error('Error creating chart:', error)
   }
