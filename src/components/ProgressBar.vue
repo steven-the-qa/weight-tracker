@@ -48,10 +48,15 @@ const calculateProgress = (): number => {
 </script>
 
 <template>
-  <div class="w-96 h-3 bg-gray-200 rounded-full overflow-hidden">
-    <div 
-      class="h-full bg-[#2E7EFD] transition-all duration-500 ease-out"
-      :style="{ width: `${calculateProgress()}%` }"
-    />
+  <div class="flex items-center gap-3">
+    <div class="w-64 h-3 bg-gray-200 rounded-full overflow-hidden">
+      <div
+        class="h-full bg-[#2E7EFD] transition-all duration-500 ease-out"
+        :style="{ width: `${calculateProgress()}%` }"
+      />
+    </div>
+    <span class="text-sm text-gray-600">
+      {{ Math.round(calculateProgress()) }}%
+    </span>
   </div>
 </template>
