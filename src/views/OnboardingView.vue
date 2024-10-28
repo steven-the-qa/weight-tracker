@@ -73,63 +73,65 @@
     >
       Logout
     </button>
-    <h1 class="text-2xl font-bold mb-8">Welcome! Let's set up your profile</h1>
-    <form @submit.prevent="handleSubmit" class="w-full max-w-md">
-      <div class="mb-6">
-        <label for="current-weight" class="block mb-2 text-lg font-medium">
-          What's your current weight?
-        </label>
-        <NumberInput
-          v-model="currentWeight"
-          id="current-weight"
-          name="current-weight"
-          :placeholder="`Enter current weight (${weightUnit})`"
-          :min="0.1"
-          :max="1000"
-          class="w-full"
-        />
-      </div>
-      <div class="mb-6">
-        <label for="goal-weight" class="block mb-2 text-lg font-medium">
-          What's your goal weight?
-        </label>
-        <NumberInput
-          v-model="goalWeight"
-          id="goal-weight"
-          name="goal-weight"
-          :placeholder="`Enter goal weight (${weightUnit})`"
-          :min="0.1"
-          :max="1000"
-          class="w-full"
-        />
-      </div>
-      <div class="mb-6">
-        <label class="block mb-2 text-lg font-medium">Preferred unit of measure</label>
-        <div class="flex">
-          <button
-            type="button"
-            @click="toggleUnit"
-            :class="{'bg-blue-500 text-white': weightUnit === 'lb', 'bg-gray-200': weightUnit === 'kg'}"
-            class="flex-1 py-2 px-4 rounded-l focus:outline-none"
-          >
-            lb
-          </button>
-          <button 
-            type="button" 
-            @click="toggleUnit" 
-            :class="{'bg-blue-500 text-white': weightUnit === 'kg', 'bg-gray-200': weightUnit === 'lb'}"
-            class="flex-1 py-2 px-4 rounded-r focus:outline-none"
-          >
-            kg
-          </button>
+    <h1 class="text-2xl font-bold mb-8 px-4 text-center">Welcome! Let's set up your profile</h1>
+    <div class="w-full px-6 sm:px-8 md:px-0">
+      <form @submit.prevent="handleSubmit" class="w-full max-w-md mx-auto">
+        <div class="mb-6">
+          <label for="current-weight" class="block mb-2 text-lg font-medium">
+            What's your current weight?
+          </label>
+          <NumberInput
+            v-model="currentWeight"
+            id="current-weight"
+            name="current-weight"
+            :placeholder="`Enter current weight (${weightUnit})`"
+            :min="0.1"
+            :max="1000"
+            class="w-full"
+          />
         </div>
-      </div>
-      <button 
-        type="submit" 
-        class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
-      >
-        Save and Continue
-      </button>
-    </form>
+        <div class="mb-6">
+          <label for="goal-weight" class="block mb-2 text-lg font-medium">
+            What's your goal weight?
+          </label>
+          <NumberInput
+            v-model="goalWeight"
+            id="goal-weight"
+            name="goal-weight"
+            :placeholder="`Enter goal weight (${weightUnit})`"
+            :min="0.1"
+            :max="1000"
+            class="w-full"
+          />
+        </div>
+        <div class="mb-6">
+          <label class="block mb-2 text-lg font-medium">Preferred unit of measure</label>
+          <div class="flex">
+            <button
+              type="button"
+              @click="toggleUnit"
+              :class="{'bg-blue-500 text-white': weightUnit === 'lb', 'bg-gray-200': weightUnit === 'kg'}"
+              class="flex-1 py-2 px-4 rounded-l focus:outline-none"
+            >
+              lb
+            </button>
+            <button
+              type="button"
+              @click="toggleUnit"
+              :class="{'bg-blue-500 text-white': weightUnit === 'kg', 'bg-gray-200': weightUnit === 'lb'}"
+              class="flex-1 py-2 px-4 rounded-r focus:outline-none"
+            >
+              kg
+            </button>
+          </div>
+        </div>
+        <button
+          type="submit"
+          class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
+        >
+          Save and Continue
+        </button>
+      </form>
+    </div>
   </main>
 </template>
