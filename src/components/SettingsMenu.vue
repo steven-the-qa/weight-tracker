@@ -54,7 +54,12 @@
     emit('handleSignout'); // Emit the handleSignout event
   };
 
+  const isUnitChanging = ref(false);
+
   const setUnit = async (newUnit: 'lb' | 'kg') => {
+    if (isUnitChanging.value) return; // Prevent toggle if already changing
+    
+    isUnitChanging.value = true;
     currentUnit.value = newUnit;
     emit('setUnit', newUnit);
 
@@ -69,8 +74,15 @@
         await updateDoc(userRef, {
           unitOfMeasure: newUnit
         });
+        
+        // Re-enable the toggle after 1 second
+        setTimeout(() => {
+          isUnitChanging.value = false;
+        }, 1000);
+        
       } catch (error) {
         console.error("Error updating unit of measure: ", error);
+        isUnitChanging.value = false; // Re-enable on error
       }
     }
   };
@@ -177,22 +189,26 @@
     </div>
     <div class="flex mt-4">
       <button
-        @click="setUnit('lb')" 
+        @click="setUnit('lb')"
+        :disabled="isUnitChanging"
         :class="{
-          'bg-blue-500 text-white': currentUnit === 'lb', 
-          'bg-gray-200 text-gray-700': currentUnit !== 'lb'
+          'bg-blue-500 text-white': currentUnit === 'lb',
+          'bg-gray-200 text-gray-700': currentUnit !== 'lb',
+          'opacity-50 cursor-not-allowed': isUnitChanging
         }" 
-        class="flex-1 py-2 rounded-l"
+        class="flex-1 py-2 rounded-l transition-opacity duration-200"
       >
         lb
       </button>
       <button
-        @click="setUnit('kg')" 
+        @click="setUnit('kg')"
+        :disabled="isUnitChanging"
         :class="{
-          'bg-blue-500 text-white': currentUnit === 'kg', 
-          'bg-gray-200 text-gray-700': currentUnit !== 'kg'
-        }" 
-        class="flex-1 py-2 rounded-r"
+          'bg-blue-500 text-white': currentUnit === 'kg',
+          'bg-gray-200 text-gray-700': currentUnit !== 'kg',
+          'opacity-50 cursor-not-allowed': isUnitChanging
+        }"
+        class="flex-1 py-2 rounded-r transition-opacity duration-200"
       >
         kg
       </button>
