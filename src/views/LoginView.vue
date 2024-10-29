@@ -3,7 +3,9 @@
   import { doc, setDoc, getDoc } from 'firebase/firestore';
   import { db } from '../firebase';
   import { useRouter } from 'vue-router';
-  import GoogleLogin from '../components/GoogleLogin.vue';
+  import GoogleLogin from '@/components/GoogleLogin.vue';
+  import yogaImage from '/assets/yoga.png'
+  import splashImage from '/assets/splash.png'
 
   const router = useRouter();
 
@@ -45,7 +47,12 @@
         </h1>
       </header>
       <div class="flex flex-col items-top flex-1 lg:flex-row lg:items-start">
-        <div class="hidden lg:block lg:w-1/2 bg-[url('/src/assets/yoga.png')] bg-cover bg-center h-full"></div>
+        <div class="hidden lg:block lg:w-1/2 bg-cover bg-center bg-no-repeat h-full" 
+             :style="{
+               backgroundImage: `url(${yogaImage})`,
+               minHeight: '600px'
+             }">
+        </div>
         <section class="w-full lg:w-1/2 flex flex-col h-full justify-between p-4">
           <div class="flex flex-col">
             <p data-testid="header-text" class="px-5 pb-2 text-black font-medium text-lg xs:text-xl lg:text-2xl">
@@ -59,7 +66,7 @@
           <div class="flex justify-center w-full flex-1 py-4">
             <img
               class="w-full max-h-[35vh] object-contain sm:w-[65%] md:w-[50%]"
-              src="/src/assets/splash.png"
+              :src="splashImage"
               alt="Athletic man facing the user, smiling with a thumbs-up gesture, standing next to an athletic woman with her body facing away but head turned back to look at the user, with blue splash pattern backdrop"
             />
           </div>

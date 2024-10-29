@@ -119,6 +119,6 @@
         </div>
     </div>
     <div class="flex justify-center items-center p-2 bg-[#6D1D7C] rounded-full cursor-pointer">
-        <div @click="handleDialog" data-testid="add-weight-btn" class="bg-[url('/src/assets/plus.png')] bg-no-repeat bg-contain h-8 w-8"></div>
+        <div @click="handleDialog" data-testid="add-weight-btn" class="bg-[url('/assets/plus.png')] bg-no-repeat bg-contain h-8 w-8"></div>
     </div>
 </template>
