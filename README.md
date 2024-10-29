@@ -1,71 +1,121 @@
-# weight-tracker
+# MyWeightTracker
 
-There's a lot going on here. I'll come back and update this with a user guide when I build the actual app.
+## Tracking your weight should be easy.
 
-## Recommended IDE Setup
+### Overview
+A minimalist weight tracking application that allows users to:
+- Sign in with Google
+- Set initial weight and goal weight
+- Track daily weight entries
+- Visualize progress through charts and progress bars
+- Toggle between lb/kg units
+- Manage weight history and settings
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+### Tech Stack
+1. **Frontend Framework**
+   - Vue 3 with Composition API
+   - TypeScript
+   - Vue Router for navigation
+   - Tailwind CSS for styling
 
-## Type Support for `.vue` Imports in TS
+2. **Backend/Infrastructure**
+   - Firebase Authentication (Google Sign-in)
+   - Firebase Firestore (Database)
+   - Firebase Hosting
+   - Firebase Analytics
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+3. **Development Tools**
+   - Vite as build tool
+   - ESLint for linting
+   - Prettier for code formatting
+   - Playwright for E2E testing
+   - Vitest for unit testing
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+### Key Features
 
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+1. **Authentication**
+   - Google OAuth integration
+   - Protected routes
+   - Session management
 
-## Customize configuration
+2. **Weight Management**
+   - Add/update weight entries
+   - Set/update goal weight
+   - Set/update starting weight
+   - Unit conversion (lb/kg)
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+3. **Data Visualization**
+   - Progress chart using Chart.js
+   - Progress bar showing goal completion
+   - Current/Start/Goal weight display
 
-## Project Setup
+4. **Settings**
+   - Toggle measurement units
+   - Delete weight history
+   - Update goal weight
+   - Update starting weight
 
-```sh
+### Setup Instructions
+
+1. **Prerequisites**
+   - Node.js installed
+   - Firebase account
+   - Google Cloud Platform project with OAuth configured
+
+2. **Installation**
+```bash
+# Clone the repository
+git clone https://github.com/steven-the-qa/weight-tracker
+cd weight-tracker
+
+# Install dependencies
 npm install
-```
 
-### Compile and Hot-Reload for Development
+# Set up environment variables
+# Create a .env file with Firebase config
 
-```sh
+# Run development server
 npm run dev
-```
 
-### Type-Check, Compile and Minify for Production
-
-```sh
+# Build for production
 npm run build
+
+# Deploy to Firebase
+npm run deploy
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+3. **Firebase Setup**
+   - Create a new Firebase project
+   - Enable Authentication with Google provider
+   - Set up Firestore database
+   - Configure Firebase hosting
+   - Update Firebase config in `src/firebase.ts`
 
-```sh
+### Project Structure
+The application follows a standard Vue.js project structure with:
+- Components in `src/components/`
+- Views in `src/views/`
+- Router configuration in `src/router/`
+- Firebase configuration in `src/firebase.ts`
+- Global styles in `src/index.css`
+
+### Testing
+The project includes:
+- Unit testing setup with Vitest
+- E2E testing setup with Playwright
+- Run tests with:
+```bash
+# Unit tests
 npm run test:unit
-```
 
-### Run End-to-End Tests with [Playwright](https://playwright.dev)
-
-```sh
-# Install browsers for the first run
-npx playwright install
-
-# When testing on CI, must build the project first
-npm run build
-
-# Runs the end-to-end tests
+# E2E tests
 npm run test:e2e
-# Runs the tests only on Chromium
-npm run test:e2e -- --project=chromium
-# Runs the tests of a specific file
-npm run test:e2e -- tests/example.spec.ts
-# Runs the tests in debug mode
-npm run test:e2e -- --debug
 ```
 
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
+### Deployment
+The application is configured for Firebase Hosting deployment:
+```bash
+npm run deploy
 ```
+
+This will build the application and deploy it to Firebase Hosting.
