@@ -50,7 +50,7 @@
         <div class="hidden lg:block lg:w-1/2 bg-cover bg-center bg-no-repeat h-full" 
              :style="{
                backgroundImage: `url(${yogaImage})`,
-               minHeight: '600px'
+               minHeight: '639px'
              }">
         </div>
         <section class="w-full lg:w-1/2 flex flex-col h-full justify-between p-4">
