@@ -66,7 +66,7 @@
 </script>
 
 <template>
-  <main class="h-screen w-full bg-white text-black flex flex-col items-center justify-center relative">
+  <main class="h-screen w-full dark:bg-gray-900 bg-white dark:text-white text-black flex flex-col items-center justify-center relative">
     <button 
       @click="handleLogout"
       class="absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300"
@@ -77,7 +77,7 @@
     <div class="w-full px-6 sm:px-8 md:px-0">
       <form @submit.prevent="handleSubmit" class="w-full max-w-md mx-auto">
         <div class="mb-6">
-          <label for="current-weight" class="block mb-2 text-lg font-medium">
+          <label for="current-weight" class="block mb-2 text-lg font-medium dark:text-gray-200">
             What's your current weight?
           </label>
           <NumberInput
@@ -91,7 +91,7 @@
           />
         </div>
         <div class="mb-6">
-          <label for="goal-weight" class="block mb-2 text-lg font-medium">
+          <label for="goal-weight" class="block mb-2 text-lg font-medium dark:text-gray-200">
             What's your goal weight?
           </label>
           <NumberInput
@@ -105,21 +105,27 @@
           />
         </div>
         <div class="mb-6">
-          <label class="block mb-2 text-lg font-medium">Preferred unit of measure</label>
+          <label class="block mb-2 text-lg font-medium dark:text-gray-200">Preferred unit of measure</label>
           <div class="flex">
             <button
               type="button"
               @click="toggleUnit"
-              :class="{'bg-blue-500 text-white': weightUnit === 'lb', 'bg-gray-200': weightUnit === 'kg'}"
-              class="flex-1 py-2 px-4 rounded-l focus:outline-none"
+              :class="{
+                'bg-blue-600 text-white': weightUnit === 'lb',
+                'dark:bg-gray-700 dark:text-gray-300 bg-gray-200 text-gray-700': weightUnit === 'kg'
+              }"
+              class="flex-1 py-2 px-4 rounded-l focus:outline-none transition-colors duration-200 hover:opacity-90"
             >
               lb
             </button>
             <button
               type="button"
               @click="toggleUnit"
-              :class="{'bg-blue-500 text-white': weightUnit === 'kg', 'bg-gray-200': weightUnit === 'lb'}"
-              class="flex-1 py-2 px-4 rounded-r focus:outline-none"
+              :class="{
+                'bg-blue-600 text-white': weightUnit === 'kg',
+                'dark:bg-gray-700 dark:text-gray-300 bg-gray-200 text-gray-700': weightUnit === 'lb'
+              }"
+              class="flex-1 py-2 px-4 rounded-r focus:outline-none transition-colors duration-200 hover:opacity-90"
             >
               kg
             </button>
@@ -127,7 +133,7 @@
         </div>
         <button
           type="submit"
-          class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
+          class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
         >
           Save and Continue
         </button>
