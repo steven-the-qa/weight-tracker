@@ -158,12 +158,12 @@
 </script>
 
 <template>
-  <div v-if="isMenuOpen" class="absolute top-14 right-0 bg-white shadow-lg p-4 w-72">
+  <div v-if="isMenuOpen" class="absolute top-14 right-0 dark:bg-gray-800 bg-white shadow-lg p-4 w-72">
     <header class="flex justify-between items-center">
-      <h1 class="text-xl">Settings</h1>
-      <button @click="toggleMenu" class="text-black">✕</button>
+      <h1 class="text-xl dark:text-white">Settings</h1>
+      <button @click="toggleMenu" class="dark:text-white text-black hover:opacity-75 transition-opacity duration-200">✕</button>
     </header>
-    <label for="goal-weight" class="block text-gray-700 mt-4">Goal Weight</label>
+    <label for="goal-weight" class="block dark:text-gray-300 text-gray-700 mt-4">Goal Weight</label>
     <div class="flex items-center">
       <NumberInput
         id="goal-weight"
@@ -171,11 +171,11 @@
         :placeholder="`New goal (${currentUnit})`"
         :min="1"
         :max="1000"
-        class="border rounded w-full py-2 px-3 mb-4 flex-grow"
+        class="dark:bg-gray-700 dark:text-white dark:border-gray-600 border rounded w-full py-2 px-3 mb-4 flex-grow"
       />
-      <button @click="updateGoalWeight" class="bg-blue-500 text-white px-5 rounded py-3 ml-2 mb-4 text-lg font-bold">Update</button>
+      <button @click="updateGoalWeight" class="bg-blue-600 hover:bg-blue-700 text-white px-5 rounded py-3 ml-2 mb-4 text-lg font-bold transition-colors duration-200">Update</button>
     </div>
-    <label for="starting-weight" class="block text-gray-700 mt-4">Starting Weight</label>
+    <label for="starting-weight" class="block dark:text-gray-300 text-gray-700 mt-4">Starting Weight</label>
     <div class="flex items-center">
       <NumberInput
         id="starting-weight"
@@ -183,20 +183,20 @@
         :placeholder="`New start (${currentUnit})`"
         :min="1"
         :max="1000"
-        class="border rounded w-full py-2 px-3 mb-4 flex-grow"
+        class="dark:bg-gray-700 dark:text-white dark:border-gray-600 border rounded w-full py-2 px-3 mb-4 flex-grow"
       />
-      <button @click="updateStartingWeight" class="bg-blue-500 text-white px-5 rounded py-3 ml-2 mb-4 text-lg font-bold">Update</button>
+      <button @click="updateStartingWeight" class="bg-blue-600 hover:bg-blue-700 text-white px-5 rounded py-3 ml-2 mb-4 text-lg font-bold transition-colors duration-200">Update</button>
     </div>
     <div class="flex mt-4">
       <button
         @click="setUnit('lb')"
         :disabled="isUnitChanging"
         :class="{
-          'bg-blue-500 text-white': currentUnit === 'lb',
-          'bg-gray-200 text-gray-700': currentUnit !== 'lb',
+          'bg-blue-600 text-white': currentUnit === 'lb',
+          'dark:bg-gray-700 dark:text-gray-300 bg-gray-200 text-gray-700': currentUnit !== 'lb',
           'opacity-50 cursor-not-allowed': isUnitChanging
         }" 
-        class="flex-1 py-2 rounded-l transition-opacity duration-200"
+        class="flex-1 py-2 rounded-l transition-all duration-200 hover:opacity-90"
       >
         lb
       </button>
@@ -204,28 +204,28 @@
         @click="setUnit('kg')"
         :disabled="isUnitChanging"
         :class="{
-          'bg-blue-500 text-white': currentUnit === 'kg',
-          'bg-gray-200 text-gray-700': currentUnit !== 'kg',
+          'bg-blue-600 text-white': currentUnit === 'kg',
+          'dark:bg-gray-700 dark:text-gray-300 bg-gray-200 text-gray-700': currentUnit !== 'kg',
           'opacity-50 cursor-not-allowed': isUnitChanging
         }"
-        class="flex-1 py-2 rounded-r transition-opacity duration-200"
+        class="flex-1 py-2 rounded-r transition-all duration-200 hover:opacity-90"
       >
         kg
       </button>
     </div>
-    <div class="border-t mt-4 pt-4">
-      <h3 class="text-lg font-medium text-red-600 mb-2">Danger Zone</h3>
+    <div class="border-t dark:border-gray-700 mt-4 pt-4">
+      <h3 class="text-lg font-medium text-red-600 dark:text-red-400 mb-2">Danger Zone</h3>
       <button
         @click="handleDeleteAllEntries"
         :disabled="isDeleting"
-        class="w-full bg-red-100 text-red-600 hover:bg-red-200 px-4 py-2 rounded transition-colors duration-200"
+        class="w-full dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50 bg-red-100 text-red-600 hover:bg-red-200 px-4 py-2 rounded transition-colors duration-200"
       >
         {{ isDeleting ? 'Deleting...' : 'Delete All Weight Entries' }}
       </button>
-      <p class="text-xs text-gray-500 mt-1">
+      <p class="text-xs dark:text-gray-400 text-gray-500 mt-1">
         This will permanently delete all your weight entries. This action cannot be undone.
       </p>
     </div>
-    <button @click="handleSignout" class="text-red-500 mt-4">Log out</button>
+    <button @click="handleSignout" class="text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 mt-4 transition-colors duration-200">Log out</button>
   </div>
 </template>

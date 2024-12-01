@@ -93,23 +93,37 @@ const createChart = async (entries: WeightEntry[]) => {
         plugins: {
           legend: {
             position: 'top' as const,
+            labels: {
+              color: document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#4b5563'
+            }
           },
           tooltip: {
             mode: 'index' as const,
             intersect: false,
+            backgroundColor: document.documentElement.classList.contains('dark') ? 'rgba(17, 24, 39, 0.8)' : 'rgba(255, 255, 255, 0.8)',
+            titleColor: document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#4b5563',
+            bodyColor: document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#4b5563',
           }
         },
         scales: {
           y: {
             beginAtZero: false,
+            grid: {
+              color: document.documentElement.classList.contains('dark') ? 'rgba(75, 85, 99, 0.2)' : 'rgba(209, 213, 219, 0.2)',
+            },
             ticks: {
+              color: document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#4b5563',
               callback: function(value) {
                 return `${Math.round(Number(value) * 10) / 10} ${props.unit}`
               }
             }
           },
           x: {
+            grid: {
+              color: document.documentElement.classList.contains('dark') ? 'rgba(75, 85, 99, 0.2)' : 'rgba(209, 213, 219, 0.2)',
+            },
             ticks: {
+              color: document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#4b5563',
               maxRotation: 45,
               minRotation: 45
             }
@@ -167,7 +181,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="w-full h-full bg-white rounded-lg shadow-lg p-4">
+  <div class="w-full h-full dark:bg-gray-800 bg-white rounded-lg shadow-lg p-4">
     <canvas ref="chartCanvas"></canvas>
   </div>
 </template>

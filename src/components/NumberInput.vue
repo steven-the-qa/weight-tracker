@@ -75,7 +75,7 @@ watch(() => props.modelValue, (newValue) => {
     @input="handleInput"
     @keydown="filterInput"
     @blur="handleBlur"
-    class="no-spinner placeholder:text-[#BDBDBD] h-14 pl-3 mr-5 rounded-lg bg-white border border-[#BDBDBD]"
+    class="no-spinner dark:placeholder:text-gray-500 placeholder:text-[#BDBDBD] h-14 pl-3 mr-5 rounded-lg dark:bg-gray-700 dark:text-white dark:border-gray-600 bg-white border border-[#BDBDBD] focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors duration-200"
     type="text"
     :id="id"
     :name="name"
@@ -88,3 +88,14 @@ watch(() => props.modelValue, (newValue) => {
     tabindex="0"
   >
 </template>
+
+<style scoped>
+.no-spinner::-webkit-inner-spin-button,
+.no-spinner::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.no-spinner {
+  -moz-appearance: textfield;
+}
+</style>
