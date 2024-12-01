@@ -119,24 +119,24 @@
 </script>
 
 <template>
-  <main class="w-full bg-white text-black overflow-hidden">
+  <main class="w-full dark:bg-gray-900 bg-white dark:text-white text-black overflow-hidden">
     <Suspense>
       <div class="flex flex-col items-center h-full">
         <h1 class="hidden lg:block text-2xl font-bold text-left w-[50%] ml-10 mt-5">Hello, Steven!</h1>
         <div class="w-full h-full lg:flex lg:flex-col lg:justify-center lg:items-center">
-            <div class="grid grid-cols-1 grid-rows-[auto_auto_45vh_auto] gap-4 p-5 text-xl font-bold text-black lg:w-[50%]">
+            <div class="grid grid-cols-1 grid-rows-[auto_auto_45vh_auto] gap-4 p-5 text-xl font-bold dark:text-white text-black lg:w-[50%]">
                 <section class="flex justify-between items-start">
                     <div data-testid="start-weight" class="flex flex-col items-center">
                         <p>Start</p>
-                        <p class="text-[#4B4B4B]">{{ displayWeight(startWeight) }}</p>
+                        <p class="dark:text-gray-400 text-[#4B4B4B]">{{ displayWeight(startWeight) }}</p>
                     </div>
                     <div data-testid="current-weight" class="flex flex-col items-center">
                         <p>Current</p>
-                        <p class="text-[#2E7EFD]">{{ displayWeight(currentWeight) }}</p>
+                        <p class="text-blue-500">{{ displayWeight(currentWeight) }}</p>
                     </div>
                     <div data-testid="goal-weight" class="flex flex-col items-center">
                         <p>Goal</p>
-                        <p class="text-[#4B4B4B]">{{ displayWeight(goalWeight) }}</p>
+                        <p class="dark:text-gray-400 text-[#4B4B4B]">{{ displayWeight(goalWeight) }}</p>
                     </div>
                 </section>
                 <section class="flex justify-center items-center">
@@ -153,7 +153,7 @@
                 <section class="flex justify-between items-end">
                     <div data-testid="weight-change" class="flex flex-col justify-center items-center">
                         <p>Change</p>
-                        <p :class="changeColor">{{ displayedChange }}</p>
+                        <p :class="[changeColor, {'dark:text-gray-400': !weightChange}]">{{ displayedChange }}</p>
                     </div>
                     <AddWeight />
                 </section>
