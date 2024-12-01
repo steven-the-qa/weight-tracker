@@ -123,9 +123,9 @@
   <main class="w-full dark:bg-gray-900 bg-white dark:text-white text-black overflow-hidden">
     <Suspense>
       <div class="flex flex-col items-center h-full">
-        <div class="w-full flex justify-between items-center px-4 lg:px-0">
-          <h1 class="hidden lg:block text-2xl font-bold text-left w-[50%] ml-10 mt-5">Hello, Steven!</h1>
-          <div class="mt-5 mr-4">
+        <div class="w-full flex justify-between items-center px-5">
+          <h1 class="text-2xl font-bold text-left mt-5">Hello, Steven!</h1>
+          <div class="mt-5">
             <ThemeToggle />
           </div>
         </div>

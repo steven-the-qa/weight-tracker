@@ -67,9 +67,9 @@
               <li>Track towards the goal</li>
             </ul>
           </div>
-          <div class="flex justify-center w-full flex-1 py-4">
+          <div class="flex justify-center items-center w-full flex-1">
             <img
-              class="w-full max-h-[35vh] object-contain sm:w-[65%] md:w-[50%] dark:opacity-90"
+              class="w-[300px] object-contain rounded-2xl"
               :src="splashImage"
               alt="Athletic man facing the user, smiling with a thumbs-up gesture, standing next to an athletic woman with her body facing away but head turned back to look at the user, with blue splash pattern backdrop"
             />
