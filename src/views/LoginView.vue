@@ -40,7 +40,7 @@
 </script>
 
 <template>
-  <main class="w-full dark:bg-gray-900 bg-white dark:text-white text-black overflow-hidden">
+  <main class="w-full dark:bg-gray-900 bg-white dark:text-white text-black overflow-hidden h-screen">
     <div class="flex flex-col w-full h-full">
       <header class="flex-shrink-0 relative">
         <div class="absolute right-4 top-1/2 -translate-y-1/2 z-10">
@@ -54,7 +54,7 @@
         <div class="hidden lg:block lg:w-1/2 bg-cover bg-center bg-no-repeat h-full opacity-90 dark:opacity-75" 
              :style="{
                backgroundImage: `url(${yogaImage})`,
-               minHeight: '639px'
+               minHeight: 'calc(100vh - 4rem)'
              }">
         </div>
         <section class="w-full lg:w-1/2 flex flex-col h-full justify-between p-4">
