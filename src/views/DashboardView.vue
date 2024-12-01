@@ -3,6 +3,7 @@
   import AddWeight from '../components/AddWeight.vue'
   import ProgressGraph from '../components/ProgressGraph.vue'
   import ProgressBar from '../components/ProgressBar.vue'
+  import ThemeToggle from '../components/ThemeToggle.vue'
   import { ref, onMounted, onUnmounted, watch } from 'vue';
   import type { Ref } from 'vue'
   import { getAuth } from 'firebase/auth'
@@ -122,7 +123,12 @@
   <main class="w-full dark:bg-gray-900 bg-white dark:text-white text-black overflow-hidden">
     <Suspense>
       <div class="flex flex-col items-center h-full">
-        <h1 class="hidden lg:block text-2xl font-bold text-left w-[50%] ml-10 mt-5">Hello, Steven!</h1>
+        <div class="w-full flex justify-between items-center px-4 lg:px-0">
+          <h1 class="hidden lg:block text-2xl font-bold text-left w-[50%] ml-10 mt-5">Hello, Steven!</h1>
+          <div class="mt-5 mr-4">
+            <ThemeToggle />
+          </div>
+        </div>
         <div class="w-full h-full lg:flex lg:flex-col lg:justify-center lg:items-center">
             <div class="grid grid-cols-1 grid-rows-[auto_auto_45vh_auto] gap-4 p-5 text-xl font-bold dark:text-white text-black lg:w-[50%]">
                 <section class="flex justify-between items-start">

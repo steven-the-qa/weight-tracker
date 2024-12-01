@@ -5,6 +5,7 @@
   import { db } from '../firebase'
   import { useRouter } from 'vue-router'
   import NumberInput from "../components/NumberInput.vue";
+  import ThemeToggle from "../components/ThemeToggle.vue";
 
   const router = useRouter()
 
@@ -67,12 +68,15 @@
 
 <template>
   <main class="h-screen w-full dark:bg-gray-900 bg-white dark:text-white text-black flex flex-col items-center justify-center relative">
-    <button 
-      @click="handleLogout"
-      class="absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300"
-    >
-      Logout
-    </button>
+    <div class="absolute top-4 right-4 flex items-center gap-4">
+      <ThemeToggle />
+      <button 
+        @click="handleLogout"
+        class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300"
+      >
+        Logout
+      </button>
+    </div>
     <h1 class="text-2xl font-bold mb-8 px-4 text-center">Welcome! Let's set up your profile</h1>
     <div class="w-full px-6 sm:px-8 md:px-0">
       <form @submit.prevent="handleSubmit" class="w-full max-w-md mx-auto">

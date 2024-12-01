@@ -4,6 +4,7 @@
   import { db } from '../firebase';
   import { useRouter } from 'vue-router';
   import GoogleLogin from '@/components/GoogleLogin.vue';
+  import ThemeToggle from '@/components/ThemeToggle.vue';
   import yogaImage from '/assets/yoga.png'
   import splashImage from '/assets/splash.png'
 
@@ -41,7 +42,10 @@
 <template>
   <main class="w-full dark:bg-gray-900 bg-white dark:text-white text-black overflow-hidden">
     <div class="flex flex-col w-full h-full">
-      <header class="flex-shrink-0">
+      <header class="flex-shrink-0 relative">
+        <div class="absolute right-4 top-1/2 -translate-y-1/2 z-10">
+          <ThemeToggle />
+        </div>
         <h1 data-testid="app-name" class="flex justify-center items-center h-12 bg-blue-600 text-white text-lg font-bold lg:justify-start lg:pl-10 lg:text-3xl lg:dark:bg-gray-900 lg:bg-white lg:text-blue-500 lg:h-16 lg:font-['Kanit'] sm:text-xl">
           MyWeightTracker
         </h1>
