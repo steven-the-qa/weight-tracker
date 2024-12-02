@@ -16,22 +16,14 @@
     const weightUnit = ref<'lb' | 'kg'>('lb')
     const state = reactive({ currentWeight, weightUnit })
 
-    const triggerState = ref(false)
+    const isOpen = ref(false)
 
-    const handleDialog = async () => {
-        const dialog: HTMLElement = document.getElementById('dialog-container') as HTMLElement
-        triggerState.value = !triggerState.value
-        if (triggerState.value) {
-            dialog.classList.replace('hidden', 'block')
-        }
-        else {
-            dialog.classList.replace('block', 'hidden')
-        }
+    const handleDialog = () => {
+        isOpen.value = !isOpen.value
     }
 
     const closeDialog = () => {
-        document.getElementById('dialog-container')?.classList.replace('block', 'hidden')
-        handleDialog()
+        isOpen.value = false
     }
 
     const handleSubmit = async () => {
@@ -68,8 +60,8 @@
 </script>
 
 <template>
-    <div id='dialog-container' class="hidden absolute top-0 left-0 h-full w-full z-[100] bg-black/50 flex justify-center items-center min-w-[300px]">
-        <div data-testid='dialog-content' class="relative flex flex-col justify-center items-center h-64 w-72 dark:bg-gray-800 bg-white/90 backdrop-blur-sm my-[50%] px-4 rounded-xl">
+    <div v-show="isOpen" id='dialog-container' class="fixed inset-0 bg-black/50 flex justify-center items-center min-w-[300px] z-50">
+        <div data-testid='dialog-content' class="relative flex flex-col justify-center items-center h-64 w-72 dark:bg-gray-800 bg-white/90 backdrop-blur-sm px-4 rounded-xl">
             <p data-testid='close-dialog' @click="closeDialog" class="inline-flex absolute top-3 right-3 text-2xl cursor-pointer dark:text-white">✕</p>
             <form @submit.prevent="handleSubmit" class="flex flex-col justify-center items-start dark:text-gray-200 text-[#4B4B4B] text-lg w-full tracking-wide">
                 <div id="current-weight-group" class="flex flex-col w-full">
