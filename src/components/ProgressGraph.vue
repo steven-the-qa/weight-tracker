@@ -22,11 +22,14 @@ const props = defineProps<{
 const chartCanvas = ref<HTMLCanvasElement | null>(null)
 const chartInstance = ref<Chart<'line', (number | null)[], unknown> | null>(null)
 let updateTimeout: number | null = null
+const isDarkMode = ref(document.documentElement.classList.contains('dark'))
 
 const emit = defineEmits<{
   (e: 'updateStart'): void
   (e: 'updateComplete'): void
 }>()
+
+const observer = ref<MutationObserver | null>(null)
 
 const fetchWeightEntries = async () => {
   const user = getAuth().currentUser
@@ -151,13 +154,28 @@ const debouncedCreateChart = (entries: WeightEntry[]) => {
 }
 
 onMounted(async () => {
-  const entries = props.entries || await fetchWeightEntries()
+  const entries = await (props.entries || fetchWeightEntries())
   debouncedCreateChart(entries)
+  
+  // Create and store observer reference
+  observer.value = new MutationObserver(async () => {
+    const newDarkMode = document.documentElement.classList.contains('dark')
+    if (isDarkMode.value !== newDarkMode) {
+      isDarkMode.value = newDarkMode
+      const entries = await (props.entries || fetchWeightEntries())
+      debouncedCreateChart(entries)
+    }
+  })
+  
+  observer.value.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['class']
+  })
 })
 
 // Watch for unit changes and update the chart
 watch(() => props.unit, async () => {
-  const entries = props.entries || await fetchWeightEntries()
+  const entries = await (props.entries || fetchWeightEntries())
   debouncedCreateChart(entries)
 })
 
@@ -176,6 +194,11 @@ onBeforeUnmount(() => {
   if (chartInstance.value) {
     chartInstance.value.destroy()
     chartInstance.value = null
+  }
+  // Safely disconnect observer
+  if (observer.value) {
+    observer.value.disconnect()
+    observer.value = null
   }
 })
 </script>
