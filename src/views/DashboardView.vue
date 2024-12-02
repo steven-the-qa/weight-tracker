@@ -124,7 +124,7 @@
     <Suspense>
       <div class="flex flex-col items-center h-full">
         <div class="w-full flex justify-between items-center px-5">
-          <h1 class="text-2xl font-bold text-left mt-5">Hello, Steven!</h1>
+          <h1 class="text-2xl font-bold text-left mt-5">Hello, {{ user?.displayName?.split(' ')[0] }}!</h1>
           <div class="mt-5">
             <ThemeToggle />
           </div>
