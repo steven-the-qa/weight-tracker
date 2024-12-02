@@ -67,7 +67,7 @@
 </script>
 
 <template>
-  <main class="h-screen w-full dark:bg-gray-900 bg-white dark:text-white text-black flex flex-col items-center justify-center relative">
+  <main class="h-screen w-full dark:bg-gray-900 bg-white dark:text-white text-black flex flex-col items-center relative">
     <div class="absolute top-4 right-4 flex items-center gap-4">
       <ThemeToggle />
       <button 
@@ -77,11 +77,11 @@
         Logout
       </button>
     </div>
-    <h1 class="text-2xl font-bold mb-8 px-4 text-center">Welcome! Let's set up your profile</h1>
-    <div class="w-full px-6 sm:px-8 md:px-0">
+    <h1 class="text-2xl font-bold mt-24 mb-6 px-4 text-center">Welcome! Let's set up your profile</h1>
+    <div class="w-full px-4 sm:px-8 md:px-0">
       <form @submit.prevent="handleSubmit" class="w-full max-w-md mx-auto">
-        <div class="mb-6">
-          <label for="current-weight" class="block mb-2 text-lg font-medium dark:text-gray-200">
+        <div class="mb-4">
+          <label for="current-weight" class="block mb-1 text-lg font-medium dark:text-gray-200">
             What's your current weight?
           </label>
           <NumberInput
@@ -94,8 +94,8 @@
             class="w-full"
           />
         </div>
-        <div class="mb-6">
-          <label for="goal-weight" class="block mb-2 text-lg font-medium dark:text-gray-200">
+        <div class="mb-4">
+          <label for="goal-weight" class="block mb-1 text-lg font-medium dark:text-gray-200">
             What's your goal weight?
           </label>
           <NumberInput
@@ -109,7 +109,7 @@
           />
         </div>
         <div class="mb-6">
-          <label class="block mb-2 text-lg font-medium dark:text-gray-200">Preferred unit of measure</label>
+          <label class="block mb-1 text-lg font-medium dark:text-gray-200">Preferred unit of measure</label>
           <div class="flex">
             <button
               type="button"
@@ -137,7 +137,7 @@
         </div>
         <button
           type="submit"
-          class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
+          class="w-full bg-blue-600 text-white py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
         >
           Save and Continue
         </button>
