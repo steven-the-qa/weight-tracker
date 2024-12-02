@@ -57,8 +57,8 @@
                minHeight: 'calc(100vh - 4rem)'
              }">
         </div>
-        <section class="w-full lg:w-1/2 flex flex-col h-full justify-between p-4">
-          <div class="flex flex-col">
+        <section class="w-full lg:w-1/2 flex flex-col h-full md:justify-between p-4">
+          <div class="flex flex-col mb-8 md:mb-0">
             <p data-testid="header-text" class="px-5 pb-2 dark:text-white text-black font-medium text-lg xs:text-xl lg:text-2xl">
               Track your weight loss journey with ease and simplicity
             </p>
@@ -67,15 +67,15 @@
               <li>Track towards the goal</li>
             </ul>
           </div>
-          <div class="flex justify-center items-center w-full flex-1">
+          <div class="hidden md:flex justify-center items-center w-full flex-1">
             <img
-              class="w-[200px] xs:w-[250px] sm:w-[300px] object-contain rounded-2xl"
+              class="w-[300px] object-contain rounded-2xl"
               :src="splashImage"
               alt="Athletic man facing the user, smiling with a thumbs-up gesture, standing next to an athletic woman with her body facing away but head turned back to look at the user, with blue splash pattern backdrop"
             />
           </div>
-          <div class="flex flex-col items-center w-full">
-            <p class="flex justify-center items-center h-10 text-lg font-bold dark:text-white xs:text-xl">Let's get started</p>
+          <div class="flex flex-col items-center w-full mt-4 md:mt-0">
+            <p class="flex justify-center items-center h-8 text-lg font-bold dark:text-white xs:text-xl mb-2">Let's get started</p>
             <GoogleLogin />
           </div>
         </section>
