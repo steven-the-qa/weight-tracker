@@ -2,16 +2,27 @@
 import { ref, onMounted } from 'vue';
 
 const isDark = ref(true);
+const isChanging = ref(false);
 
 const toggleTheme = () => {
+  if (isChanging.value) return;
+
+  isChanging.value = true;
   isDark.value = !isDark.value;
+
   if (isDark.value) {
     document.documentElement.classList.add('dark');
   } else {
     document.documentElement.classList.remove('dark');
   }
+
   // Save preference to localStorage
   localStorage.setItem('theme', isDark.value ? 'dark' : 'light');
+
+  // Re-enable the toggle after 1 second
+  setTimeout(() => {
+    isChanging.value = false;
+  }, 1500);
 };
 
 onMounted(() => {
@@ -29,7 +40,8 @@ onMounted(() => {
 <template>
   <button
     @click="toggleTheme"
-    class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200"
+    :disabled="isChanging"
+    class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
     :title="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
   >
     <!-- Sun icon for dark mode -->
