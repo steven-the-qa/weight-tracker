@@ -86,5 +86,5 @@ watch(isLoggedIn, async (newValue) => {
     @handleSignout="handleSignout"
   />
 
-  <RouterView class="min-w-[300px] h-[calc(100vh-3rem)] overflow-hidden"/>
+  <RouterView class="min-w-[300px] h-[calc(100vh-8rem)] overflow-hidden"/>
 </template>
