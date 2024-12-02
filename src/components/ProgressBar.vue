@@ -55,7 +55,7 @@ const calculateProgress = (): number => {
         :style="{ width: `${calculateProgress()}%` }"
       />
     </div>
-    <span class="text-sm text-gray-600">
+    <span class="text-sm dark:text-gray-300 text-gray-600">
       {{ Math.round(calculateProgress()) }}%
     </span>
   </div>
