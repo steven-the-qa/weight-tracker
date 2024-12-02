@@ -72,7 +72,7 @@ const createChart = async (entries: WeightEntry[]) => {
       new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime()
     )
 
-    const labels = sortedEntries.map(entry => 
+    const labels = sortedEntries.map(entry =>
       new Date(entry.createdDate).toLocaleDateString()
     )
     const data = sortedEntries.map(entry => entry.weight)
