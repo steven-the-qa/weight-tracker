@@ -57,28 +57,26 @@
                minHeight: 'calc(100vh - 4rem)'
              }">
         </div>
-        <section class="w-full lg:w-1/2 flex flex-col">
-          <div class="flex flex-col space-y-4 p-4">
-            <div>
-              <p data-testid="header-text" class="px-5 pb-2 dark:text-white text-black font-medium text-lg xs:text-xl lg:text-2xl">
-                Track your weight loss journey with ease and simplicity
-              </p>
-              <ul data-testid="goal-list" role="list" class="ml-12 list-disc font-light text-sm dark:text-gray-300 xs:text-base lg:text-lg">
-                <li>Set a goal</li>
-                <li>Track towards the goal</li>
-              </ul>
-            </div>
-            <div class="hidden md:block flex-1">
-              <img
-                class="w-[300px] mx-auto object-contain rounded-2xl"
-                :src="splashImage"
-                alt="Athletic man facing the user, smiling with a thumbs-up gesture, standing next to an athletic woman with her body facing away but head turned back to look at the user, with blue splash pattern backdrop"
-              />
-            </div>
-            <div class="flex flex-col items-center">
-              <p class="flex justify-center items-center h-8 text-lg font-bold dark:text-white xs:text-xl mb-2">Let's get started</p>
-              <GoogleLogin />
-            </div>
+        <section class="w-full lg:w-1/2 flex flex-col h-full justify-between p-4">
+          <div class="flex flex-col">
+            <p data-testid="header-text" class="px-5 pb-2 dark:text-white text-black font-medium text-lg xs:text-xl lg:text-2xl">
+              Track your weight loss journey with ease and simplicity
+            </p>
+            <ul data-testid="goal-list" role="list" class="ml-12 list-disc font-light text-sm dark:text-gray-300 xs:text-base lg:text-lg">
+              <li>Set a goal</li>
+              <li>Track towards the goal</li>
+            </ul>
+          </div>
+          <div class="flex justify-center items-center w-full flex-1">
+            <img
+              class="w-[200px] xs:w-[250px] sm:w-[300px] object-contain rounded-2xl"
+              :src="splashImage"
+              alt="Athletic man facing the user, smiling with a thumbs-up gesture, standing next to an athletic woman with her body facing away but head turned back to look at the user, with blue splash pattern backdrop"
+            />
+          </div>
+          <div class="flex flex-col items-center w-full">
+            <p class="flex justify-center items-center h-8 text-lg font-bold dark:text-white xs:text-xl mb-2">Let's get started</p>
+            <GoogleLogin />
           </div>
         </section>
       </div>
