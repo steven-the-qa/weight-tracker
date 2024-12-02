@@ -120,7 +120,7 @@
 </script>
 
 <template>
-  <main class="w-full dark:bg-gray-900 bg-white dark:text-white text-black overflow-hidden">
+  <main class="h-[calc(100vh-3rem)] w-full dark:bg-gray-900 bg-white dark:text-white text-black overflow-hidden">
     <Suspense>
       <div class="flex flex-col items-center h-full">
         <div class="w-full flex justify-between items-center px-5">

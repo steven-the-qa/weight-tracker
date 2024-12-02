@@ -67,7 +67,7 @@
 </script>
 
 <template>
-  <main class="h-screen w-full dark:bg-gray-900 bg-white dark:text-white text-black flex flex-col items-center relative">
+  <main class="h-[calc(100vh-8rem)] w-full dark:bg-gray-900 bg-white dark:text-white text-black flex flex-col items-center relative">
     <div class="absolute top-4 right-4 flex items-center gap-4">
       <ThemeToggle />
       <button 
