@@ -54,6 +54,7 @@ A minimalist weight tracking application that allows users to:
    - Delete weight history
    - Update goal weight
    - Update starting weight
+   - Toggle between dark and light themes
 
 ### Setup Instructions
 
