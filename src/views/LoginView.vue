@@ -40,7 +40,7 @@
 </script>
 
 <template>
-  <main class="h-[calc(100vh-8rem)] w-full dark:bg-gray-900 bg-white dark:text-white text-black overflow-hidden">
+  <main class="h-[calc(100vh-8rem)] sm:h-full w-full dark:bg-gray-900 bg-white dark:text-white text-black overflow-hidden">
     <div class="flex flex-col w-full h-full">
       <header class="flex-shrink-0 relative">
         <div class="absolute right-4 top-1/2 -translate-y-1/2 z-10">
